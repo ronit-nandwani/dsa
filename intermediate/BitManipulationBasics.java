@@ -1,4 +1,6 @@
-public class BitManipulation {
+package intermediate;
+
+public class BitManipulationBasics {
     // Given two binary strings A and B. Return their sum (also a binary string).
     public String addBinary(String A, String B) {
         int carry=0;
