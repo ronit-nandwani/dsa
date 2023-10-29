@@ -1,6 +1,22 @@
 package advanced.arrays;
 
 public class Arrays2D {
+
+    // Given a binary sorted matrix A of size N x N. Find the row with the maximum number of 1.
+    public int findRowWithMax1(int[][] A) {
+        int n=A.length,m=A[0].length;
+        int i=0,j=m-1,ans=0;
+
+        while(i<n && j>=0) {
+            while(j>=0 && A[i][j]==1) {
+                j--;
+                ans=i;
+            }
+            i++;
+        }
+        return ans;
+    }
+
     // Given an integer A, generate a square matrix filled with elements from 1 to A2 in spiral order and return the generated square matrix.
     // For N=5 output is below
     // [ [1,   2,  3,  4, 5],
