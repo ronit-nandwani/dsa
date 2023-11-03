@@ -29,6 +29,48 @@ public class ArraysInterviewProblems {
      * Interval(int s, int e) { start = s; end = e; }
      * }
      */
+
+    // Given an unsorted integer array, A of size N. Find the first missing positive integer.
+    //
+    //Note: Your algorithm should run in O(n) time and use constant space.
+    public static int firstMissingPositive(ArrayList<Integer> A) {
+        int n = A.size();
+        for(int i=0;i<n;i++) {
+            int it = A.get(i);
+            if(it <= 0) {
+                A.set(i, n+2);
+            }
+        }
+        for(int i=0;i<n;i++) {
+            int x = Math.abs(A.get(i));
+
+            if(x >= 1 && x <= n) {
+                int index = x-1;
+                int elAtIndex = A.get(index);
+                if(elAtIndex > 0) {
+                    A.set(index, elAtIndex * -1);
+                }
+            }
+        }
+
+        for(int i=0;i<n;i++) {
+            if(A.get(i) > 0) {
+                return i+1;
+            }
+        }
+        return n+1;
+    }
+
+//    public static ArrayList<Interval> mergeNonOverlappingIntervals(ArrayList<Interval> intervals, Interval newInterval) {
+//        ArrayList<Interval> inter = new ArrayList<Interval>();
+//
+//        for(int i=0;i< intervals.size();i++) {
+//            Interval ip = intervals.get(i);
+//
+//        }
+//        return inter;
+//    }
+
     public static Interval[] mergeOverlappingIntervals(Interval[] intervals) {
         Arrays.sort(intervals, new Comparator<Interval>() {
             @Override
@@ -72,13 +114,20 @@ public class ArraysInterviewProblems {
 //        Interval[] intervals = new Interval[]{new Interval(4, 100), new Interval(48, 94), new Interval(16, 21), new Interval(58, 71), new Interval(36, 53), new Interval(49, 68), new Interval(18, 42), new Interval(37, 90), new Interval(68, 75), new Interval(6, 57)};
 
         // A : [ (1, 10), (2, 9), (3, 8), (4, 7), (5, 6), (6, 6) ]
-        Interval[] intervals = new Interval[]{new Interval(1, 10), new Interval(2, 9), new Interval(3, 8), new Interval(4, 7), new Interval(5, 6), new Interval(6, 6)};
 
-        Interval[] iq = mergeOverlappingIntervals(intervals);
-        for (Interval iqp : iq) {
-            System.out.print(iqp.start);
-            System.out.print(" : ");
-            System.out.println(iqp.end);
-        }
+//        Interval[] intervals = new Interval[]{new Interval(1, 10), new Interval(2, 9), new Interval(3, 8), new Interval(4, 7), new Interval(5, 6), new Interval(6, 6)};
+//        Interval[] iq = mergeOverlappingIntervals(intervals);
+//        for (Interval iqp : iq) {
+//            System.out.print(iqp.start);
+//            System.out.print(" : ");
+//            System.out.println(iqp.end);
+//        }
+
+        ArrayList<Integer> ar= new ArrayList<Integer>();
+        ar.add(1);
+        ar.add(7);
+        ar.add(2);
+        System.out.println(firstMissingPositive(ar));
+
     }
 }
