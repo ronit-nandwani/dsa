@@ -61,15 +61,42 @@ public class ArraysInterviewProblems {
         return n+1;
     }
 
-//    public static ArrayList<Interval> mergeNonOverlappingIntervals(ArrayList<Interval> intervals, Interval newInterval) {
-//        ArrayList<Interval> inter = new ArrayList<Interval>();
-//
-//        for(int i=0;i< intervals.size();i++) {
-//            Interval ip = intervals.get(i);
-//
-//        }
-//        return inter;
-//    }
+
+    // You have a set of non-overlapping intervals. You are given a new interval [start, end], insert this new interval into the set of intervals (merge if necessary).
+    //You may assume that the intervals were initially sorted according to their start times.
+    public static ArrayList<Interval> mergeNonOverlappingIntervals(ArrayList<Interval> intervals, Interval newInterval) {
+        int n = intervals.size();
+        int s = newInterval.start, e = newInterval.end;
+        ArrayList<Interval> inter = new ArrayList<Interval>();
+        if(n==0) {
+            Interval inh = new Interval(s, e);
+            inter.add(inh);
+            return inter;
+        }
+        Interval it = intervals.get(0);
+        for(int i=0;i< intervals.size();i++) {
+            Interval ip = intervals.get(i);
+            if(ip.end < s) {
+                Interval interval = new Interval(ip.start, ip.end);
+                inter.add(interval);
+            } else if(e < ip.start) {
+                Interval interval = new Interval(s, e);
+                inter.add(interval);
+                for(int j=i; j<n;j++) {
+                    Interval jp = intervals.get(j);
+                    interval = new Interval(jp.start, jp.end);
+                    inter.add(interval);
+                }
+                return inter;
+            } else {
+                s = Math.min(s,ip.start);
+                e = Math.max(e,ip.end);
+            }
+        }
+        Interval inh = new Interval(s, e);
+        inter.add(inh);
+        return inter;
+    }
 
     public static Interval[] mergeOverlappingIntervals(Interval[] intervals) {
         Arrays.sort(intervals, new Comparator<Interval>() {
@@ -123,11 +150,23 @@ public class ArraysInterviewProblems {
 //            System.out.println(iqp.end);
 //        }
 
-        ArrayList<Integer> ar= new ArrayList<Integer>();
-        ar.add(1);
-        ar.add(7);
-        ar.add(2);
-        System.out.println(firstMissingPositive(ar));
+//        ArrayList<Integer> ar= new ArrayList<Integer>();
+//        ar.add(1);
+//        ar.add(7);
+//        ar.add(2);
+//        System.out.println(firstMissingPositive(ar));
 
+
+//        A : [ (1, 2), (3, 6) ]
+//        B : (10, 8)
+        // Ans: (1, 2) (3, 6) (8, 10)
+
+        Interval iu = new Interval(1,2);
+        ArrayList<Interval> ar= new ArrayList<Interval>();
+        ar.add(iu);
+        iu = new Interval(3,6);
+        ar.add(iu);
+        iu = new Interval(10,8);
+        System.out.println(mergeNonOverlappingIntervals(ar,iu));
     }
 }
