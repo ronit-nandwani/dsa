@@ -1,6 +1,52 @@
 package advanced.arrays;
 
 public class Arrays2D {
+    // You are given a 2D integer matrix A, make all the elements in a row or column zero if the A[i][j] = 0. Specifically, make entire ith row and jth column zero.
+    public int[][] rowToColumnZero(int[][] A) {
+        int n = A.length;
+        int m = A[0].length;
+
+        for(int r=0;r<n;r++) {
+            boolean flag = false;
+            for(int c=0;c<m;c++) {
+                if(A[r][c] == 0) {
+                    flag = true;
+                }
+            }
+            if(flag == true) {
+                for(int c=0;c<m;c++) {
+                    if(A[r][c] != 0) {
+                        A[r][c] = -1;
+                    }
+                }
+            }
+        }
+
+        for(int c=0;c<n;c++) {
+            boolean flag = false;
+            for(int r=0;r<m;r++) {
+                if(A[r][c] == 0) {
+                    flag = true;
+                }
+            }
+            if(flag == true) {
+                for(int r=0;r<m;r++) {
+                    if(A[r][c] != 0) {
+                        A[r][c] = -1;
+                    }
+                }
+            }
+        }
+
+        for(int r=0;r<n;r++) {
+            for(int c=0;c<m;c++) {
+                if(A[r][c] == -1) {
+                    A[r][c] = 0;
+                }
+            }
+        }
+        return A;
+    }
 
     // Given a binary sorted matrix A of size N x N. Find the row with the maximum number of 1.
     public int findRowWithMax1(int[][] A) {
