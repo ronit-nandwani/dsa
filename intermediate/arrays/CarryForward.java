@@ -4,13 +4,19 @@ import java.util.ArrayList;
 
 public class CarryForward {
 
-    //
-
+    // Given an array A of length N, return the sub array from B to C.
+    public ArrayList<Integer> subArrayFromBtoC(ArrayList<Integer> A, int B, int C) {
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        for(int i=B;i<=C;i++) {
+            arr.add(A.get(i));
+        }
+        return arr;
+    }
 
     // Generate all sub arrays
     // You are given an array A of N integers.
     // Return a 2D array consisting of all the sub arrays of the array
-    public ArrayList<ArrayList<Integer>> solve(ArrayList<Integer> A) {
+    public ArrayList<ArrayList<Integer>> allSubArrays(ArrayList<Integer> A) {
         ArrayList<ArrayList<Integer>> arr= new ArrayList<ArrayList<Integer>>();
         for(int i=0;i<A.size();i++){
             for(int j=i;j<A.size();j++){
