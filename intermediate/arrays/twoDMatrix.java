@@ -1,4 +1,27 @@
+package intermediate.arrays;
+
+import java.util.ArrayList;
+
 public class twoDMatrix {
+    // Given 2 arrays of integers A and B
+    // Return a 2D array of integers such that i-th row of the array contains list of values in A such that A[j]%B[i]==0 in A in sequential order
+    public ArrayList<ArrayList<Integer>> solve(ArrayList<Integer> A, ArrayList<Integer> B) {
+        ArrayList<ArrayList<Integer>> arr = new ArrayList<ArrayList<Integer>>();
+        int n = A.size();
+        int m = B.size();
+
+        for(int i=0;i<m;++i) {
+            ArrayList<Integer> ar = new ArrayList<Integer>();
+            for(int j=0;j<n;j++) {
+                if(A.get(j) % B.get(i) == 0) {
+                    ar.add(A.get(j));
+                }
+            }
+            arr.add(ar);
+        }
+        return arr;
+    }
+
     public int[][] matrixTranspose(int[][] A) {
         int n = A.length;
         int m = A[0].length;
