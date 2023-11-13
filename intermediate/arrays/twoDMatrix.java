@@ -3,6 +3,46 @@ package intermediate.arrays;
 import java.util.ArrayList;
 
 public class twoDMatrix {
+    // Give an N * N square matrix A, return an array of its anti-diagonals. Look at the example for more details.
+    // Return a 2D integer array of size (2 * N-1) * N, representing the anti-diagonals of input array A.
+    // The vacant spaces in the grid should be assigned to 0.
+    // for ex: input:
+    // 1 2 3
+    // 4 5 6
+    // 7 8 9
+    // Output:
+    // 1 0 0
+    // 2 4 0
+    // 3 5 7
+    // 6 8 0
+    // 9 0 0
+    public static int[][] diagonal(int[][] A) {
+        int n = A.length;
+        int m = A[0].length;
+        int[][] arr = new int[2*n-1][n];
+        int r1 = 0;
+        for(int j=0;j<m;j++) {
+            int r=0,c=j;
+            int c1=0;
+            while(r<n && c>=0) {
+                arr[r1][c1] = A[r][c];
+                r++;c--;c1++;
+            }
+            r1++;
+        }
+        for(int i=1;i<n;i++) {
+            int r=i,c=m-1;
+            int c1=0;
+            while(r<n && c>=0) {
+                arr[r1][c1] = A[r][c];
+                r++;c--;c1++;
+            }
+            r1++;
+        }
+        return arr;
+    }
+
+
     // Given 2 arrays of integers A and B
     // Return a 2D array of integers such that i-th row of the array contains list of values in A such that A[j]%B[i]==0 in A in sequential order
     public ArrayList<ArrayList<Integer>> solve(ArrayList<Integer> A, ArrayList<Integer> B) {
@@ -82,5 +122,9 @@ public class twoDMatrix {
             sum += A[i][i];
         }
         return sum;
+    }
+
+    public static void main(String[] args) {
+        diagonal(new int[][]{{1,2,3},{4,5,6},{7,8,9}});
     }
 }
