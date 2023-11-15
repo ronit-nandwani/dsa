@@ -1,6 +1,32 @@
+package intermediate.hashing_basics;
+
 import java.util.*;
 
 public class HashingBasics {
+    // Find the count of the sub arrays in the array which sums to zero. Since the answer can be very large, return the remainder on dividing the result with 109+7
+    public int countSubArrayWithZeroSum(int[] A) {
+        int n = A.length;
+        long[] prefixSum = new long[n];
+        prefixSum[0] = A[0];
+        long count = 0;
+        HashMap<Long,Integer> hm = new HashMap<Long,Integer>();
+        for(int i=1;i<n;i++) {
+            prefixSum[i] = prefixSum[i-1] + A[i];
+        }
+        long sum = 0;
+        hm.put(sum,1);
+        for(int i=0;i<n;i++) {
+            if(hm.containsKey(prefixSum[i])) {
+                int c = hm.get(prefixSum[i]);
+                count += c;
+                c++;
+                hm.put(prefixSum[i],c);
+            } else {
+                hm.put(prefixSum[i],1);
+            }
+        }
+        return (int)(count % (1000000000 + 7));
+    }
 
     // Given an array of integers A, find and return whether the given array contains a non-empty subarray with a sum equal to 0.
     //
