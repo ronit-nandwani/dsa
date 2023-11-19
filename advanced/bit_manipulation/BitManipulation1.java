@@ -1,6 +1,17 @@
 package advanced.bit_manipulation;
 
 public class BitManipulation1 {
+    // Given an integer A. Unset B bits from the right of A in binary.
+    // For example, if A = 93 and B = 4, the binary representation of A is 1011101.
+    // If we unset the rightmost 4 bits, we get the binary number 1010000, which is equal to the decimal value 80.
+    public long unsetXBitsFromRight(long A, int B) {
+        for(long i=0;i<B;i++) {
+            if((A & (1<<i)) > 0) {
+                A = A ^ (1<<i);
+            }
+        }
+        return A;
+    }
 
     // Alex and Sam are good friends. Alex is doing a lot of programming these days. He has set a target score of A for himself.
     //Initially, Alex's score was zero. Alex can double his score by doing a question, or Alex can seek help from Sam for doing questions that will contribute 1 to Alex's score. Alex wants his score to be precisely A. Also, he does not want to take much help from Sam.
