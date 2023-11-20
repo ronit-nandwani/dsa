@@ -2,6 +2,26 @@ package advanced.recursion;
 
 public class Recursion {
 
+    // Palindrome: Write a recursive function that checks whether string A is a
+    // palindrome or Not.
+    // Return 1 if the string A is a palindrome, else return 0.
+    // Note: A palindrome is a string that's the same when read forward and
+    // backward.
+    public int rec(String A, int n, int s) {
+        if (s >= n) {
+            return 1;
+        }
+        if (A.charAt(s) == A.charAt(n)) {
+            ++s;
+            n--;
+            return rec(A, n, s);
+        }
+        return 0;
+    }
+
+    public int palindrome(String A) {
+        return rec(A, A.length() - 1, 0);
+    }
 
     // MCQ2
     public static int fun(int x, int n) {
