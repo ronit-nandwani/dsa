@@ -3,7 +3,22 @@ package intermediate.arrays;
 import java.util.ArrayList;
 
 public class twoDMatrix {
-    // You are given two matrices A & B of same size, you have to return another matrix which is the sum of A and B.
+    // You are given two matrices A and B of equal dimensions and you have to check whether two matrices are equal or not.
+    public int areMatricesSame(int[][] A, int[][] B) {
+        int n = A.length;
+        int m = A[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (A[i][j] != B[i][j]) {
+                    return 0;
+                }
+            }
+        }
+        return 1;
+    }
+
+    // You are given two matrices A & B of same size, you have to return another
+    // matrix which is the sum of A and B.
     public int[][] addMatrices(int[][] A, int[][] B) {
         int n = A.length;
         int m = A[0].length;
