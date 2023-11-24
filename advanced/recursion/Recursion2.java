@@ -1,6 +1,23 @@
 package advanced.recursion;
 
 public class Recursion2 {
+    // On the first row, we write a 0. Now in every subsequent row, we look at the previous row and replace each occurrence of 0 with 01, and each occurrence of 1 with 10.
+    // Given row number A and index B, return the Bth indexed symbol in row A. (The values of B are 0-indexed.).
+    public int findKthSymbol(int A, long B) {
+        //base case
+        if(A==1){
+            return 0;
+        }
+        //find the val of previus row ,B/2 value (in A row B is based on A-1 row B/2 index)
+        int val = findKthSymbol(A-1,B/2);
+
+        if(B%2==0){
+            return val;
+        }
+        return 1-val;
+    }
+
+    
     // Tower of Hanoi In the classic problem of the Towers of Hanoi, you have 3 towers numbered from 1 to 3 (left to right) and A disks numbered from 1 to A (top to bottom) of different sizes which can slide onto any tower.
     //The puzzle starts with disks sorted in ascending order of size from top to bottom (i.e., each disk sits on top of an even larger one).
     //You have the following constraints:
