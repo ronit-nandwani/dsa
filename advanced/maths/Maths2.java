@@ -1,6 +1,20 @@
 package advanced.maths;
 
 public class Maths2 {
+
+    // Write a program to print the pascal triangle up to A rows.
+    public int[][] pascalTriangle(int A) {
+        int[][] arr = new int[A][A];
+        for(int i=0; i<A;i++) {
+            arr[i][0]=1;
+            arr[i][i]=1;
+            for(int j=1;j<i;j++) {
+                arr[i][j] = arr[i-1][j-1]+arr[i-1][j];
+            }
+        }
+        return arr;
+    }
+
     // Given a positive integer A, return its corresponding column title as it appears in an Excel sheet.
 
     // For example:
