@@ -1,8 +1,39 @@
 package advanced.maths;
 
 public class Maths2 {
+    // Given three integers A, B, and C, where A represents n, B represents r, and C represents m, find and return the value of nCr % m where nCr % m = (n!/((n-r)!*r!))% m.
+    //x! means factorial of x i.e. x! = 1 * 2 * 3... * x.
+    public static int ncrModM(int A, int B, int C) {
 
-    // Helper for findrank: Returns factorial of n
+        // Optimised their approach
+
+        // dp[n][r] stores the value of nCr
+        int[][] dp = new int[A + 1][B + 1];
+        for(int i = 0; i <= A; i++) {
+            for(int j = 0; j <= Math.min(i, B); j++) {
+                if(j == i || j == 0) {
+                    dp[i][j] = 1;
+                } else {
+                    // nCr = (n - 1)C(r - 1) + (n - 1)Cr
+                    dp[i][j] = (dp[i - 1][j - 1] % C + dp[i - 1][j] % C) % C;
+                }
+            }
+        }
+        return dp[A][B] % C;
+
+        // My Approach - Also Works
+        //        int[][] ncr = new int[A+1][B+1];
+        //        for(int i=1;i<A+1;i++) {
+        //            ncr[i][0] = 1;
+        //            // ncr[i][i] = 1;
+        //      for(int j=1;j<=Math.min(i,B);j++) {
+        //                ncr[i][j] = (ncr[i-1][j-1] + ncr[i-1][j])%C;
+        //            }
+        //        }
+        //        return ncr[A][B]%C;
+    }
+
+    // Helper for findRank: Returns factorial of n
     public static int facto(int n) {
         if(n==0) {
             return 1;
@@ -71,7 +102,11 @@ public class Maths2 {
     }
 
     public static void main(String[] args) {
-        // 318057
-        System.out.println(findRank("ZCSFLVHXRYJQKWABGT"));
+        // Expected Output:: 318057
+        // System.out.println(findRank("ZCSFLVHXRYJQKWABGT"));
+
+
+        // Expected Output: 1
+        System.out.println(ncrModM(1000000,1,999999));
     }
 }
