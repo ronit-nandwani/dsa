@@ -1,5 +1,34 @@
 public class PrefixSum {
 
+    // You are given an array A of integers of size N.
+    // Your task is to find the equilibrium index of the given array
+    // The equilibrium index of an array is an index such that the sum of elements at lower indexes is equal to the sum of elements at higher indexes.
+    // If there are no elements that are at lower indexes or at higher indexes, then the corresponding sum of elements is considered as 0.
+    // Note:
+    // Array indexing starts from 0.
+    // If there is no equilibrium index then return -1.
+    // If there are more than one equilibrium indexes then return the minimum index.
+    public int equilibriumIndexofArray(int[] A) {
+        int N=A.length;
+        int count = 0;
+        int[] preSum = new int[N];
+        preSum[0] = A[0];
+        for(int i=1;i<N;i++){
+            preSum[i] = preSum[i-1]+A[i];
+        }
+        for(int i=0;i<N;i++){
+            int leftSum = 0;
+            if(i>0){
+                leftSum = preSum[i-1];
+            }
+            int rightSum = preSum[N-1] - preSum[i];
+            if(leftSum==rightSum){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     // Given an array, arr[] of size N, the task is to find the count of array indices
     // such that removing an element from these indices makes the sum of even-indexed
     // and odd-indexed array elements equal.
