@@ -1,4 +1,59 @@
+package intermediate.arrays;
+
 public class SlidingWindowAndContribution {
+    // Given an array of integers A and an integer B, find and return the minimum number of swaps required to bring all the numbers less than or equal to B together.
+    // Note: It is possible to swap any two elements, not necessarily consecutive.
+    public int minimumSwaps(int[] A, int B) {
+        //Step 1: Counting the number of elements which are less than or equal to B
+        int minCount = 0;
+
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] <= B) {
+                minCount++;
+            }
+        }
+
+        //Step 2: After calculating the #elements less than or equal to k
+        //this count becomes the length of our sliding window.
+        //counting the #elements (in var maxCount) greater B in this window
+        int maxCount = 0;
+        for (int i = 0; i < minCount; i++) {
+            if (A[i] > B) {
+                maxCount++;
+            }
+        }
+
+        //Step 3: minSwap is the answer variable.
+        //Initializing minSwap with maxCount for the current window
+        int minSwap = maxCount;
+
+        for (int i = minCount; i < A.length; i++) {
+
+            //Checking if the current window is greater than B
+            //If true then increment maxCount by 1
+
+            if (A[i] > B) {
+                maxCount++;
+            }
+
+            //Checking if the previous window was greater than B
+            //If true then decrement maxCount by 1
+            //leaving bigger element behind
+
+            if (A[i - minCount] > B) {
+                maxCount--;
+            }
+
+            //Checking if the current window (maxCount) or previous window is lesser
+            //If maxCount (current window count) < minSwap (previous window count)
+            //Then update minimum value
+            minSwap = Math.min(minSwap, maxCount);
+
+        }
+
+        return minSwap;
+    }
+
     // You are given an integer array A of length N.
     // You have to find the sum of all sub array sums of A.
     public long subArraySum(int[] A) {
