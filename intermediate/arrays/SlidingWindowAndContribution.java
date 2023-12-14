@@ -1,6 +1,26 @@
 package intermediate.arrays;
 
 public class SlidingWindowAndContribution {
+    // Given an array A of N non-negative numbers and a non-negative number B,
+    // you need to find the number of subarrays in A with a sum less than B.
+    // We may assume that there is no overflow.
+    // Input: A = [2, 5, 6] && B = 10
+    // Output: 4
+    public int countingSubArrays(int[] A, int B) {
+        int n = A.length;
+        int count = 0;
+        for (int s = 0; s < n; s++){    
+            int sum=0;
+            for (int e = s; e < n; e++){    
+                sum = sum + A[e];  
+                if(sum < B){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     // Given an array of integers A and an integer B, find and return the minimum number of swaps required to bring all the numbers less than or equal to B together.
     // Note: It is possible to swap any two elements, not necessarily consecutive.
     public int minimumSwaps(int[] A, int B) {
