@@ -4,6 +4,41 @@ import java.util.ArrayList;
 
 public class CarryForward {
 
+    // Given an integer array A containing N distinct integers, you have to find all the leaders in array A. An element is a leader if it is strictly greater than all the elements to its right side.
+    // NOTE: The rightmost element is always a leader.
+    public ArrayList<Integer> leadersInAnArray(ArrayList<Integer> A) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        //since the element should be leader of all the element to its right side, we can find it from the backwards
+        int n= A.size();
+        result.add(A.get(n-1));
+        int max = A.get(n-1);
+        for(int i=n-2;i>=0;i--){
+            if(A.get(i)>max){
+                max = A.get(i);
+                result.add(A.get(i));
+            }
+        }
+        return result;
+    }
+
+    // Best Time to buy and sell stocks 1
+    // Say you have an array, A, for which the ith element is the price of a given stock on day i.
+    // If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+    // Return the maximum possible profit.
+    public int maxProfit(final int[] A) {
+        if (A.length==0){
+            return 0;
+        }
+        int maxProfit=Integer.MIN_VALUE;
+        int minPrice=Integer.MAX_VALUE;
+       
+        for(int i=0; i< A.length; i++){
+        minPrice = Math.min(minPrice, A[i]);
+        maxProfit = Math.max(maxProfit, A[i] - minPrice);
+        }
+        return maxProfit;
+    }
+
     // Given an array A of length N, return the sub array from B to C.
     public ArrayList<Integer> subArrayFromBtoC(ArrayList<Integer> A, int B, int C) {
         ArrayList<Integer> arr = new ArrayList<Integer>();
