@@ -4,16 +4,19 @@ import java.util.ArrayList;
 
 public class CarryForward {
 
-    // Given an integer array A containing N distinct integers, you have to find all the leaders in array A. An element is a leader if it is strictly greater than all the elements to its right side.
+    // Given an integer array A containing N distinct integers, you have to find all
+    // the leaders in array A. An element is a leader if it is strictly greater than
+    // all the elements to its right side.
     // NOTE: The rightmost element is always a leader.
     public ArrayList<Integer> leadersInAnArray(ArrayList<Integer> A) {
         ArrayList<Integer> result = new ArrayList<Integer>();
-        //since the element should be leader of all the element to its right side, we can find it from the backwards
-        int n= A.size();
-        result.add(A.get(n-1));
-        int max = A.get(n-1);
-        for(int i=n-2;i>=0;i--){
-            if(A.get(i)>max){
+        // since the element should be leader of all the element to its right side, we
+        // can find it from the backwards
+        int n = A.size();
+        result.add(A.get(n - 1));
+        int max = A.get(n - 1);
+        for (int i = n - 2; i >= 0; i--) {
+            if (A.get(i) > max) {
                 max = A.get(i);
                 result.add(A.get(i));
             }
@@ -22,19 +25,22 @@ public class CarryForward {
     }
 
     // Best Time to buy and sell stocks 1
-    // Say you have an array, A, for which the ith element is the price of a given stock on day i.
-    // If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+    // Say you have an array, A, for which the ith element is the price of a given
+    // stock on day i.
+    // If you were only permitted to complete at most one transaction (ie, buy one
+    // and sell one share of the stock), design an algorithm to find the maximum
+    // profit.
     // Return the maximum possible profit.
     public int maxProfit(final int[] A) {
-        if (A.length==0){
+        if (A.length == 0) {
             return 0;
         }
-        int maxProfit=Integer.MIN_VALUE;
-        int minPrice=Integer.MAX_VALUE;
-       
-        for(int i=0; i< A.length; i++){
-        minPrice = Math.min(minPrice, A[i]);
-        maxProfit = Math.max(maxProfit, A[i] - minPrice);
+        int maxProfit = Integer.MIN_VALUE;
+        int minPrice = Integer.MAX_VALUE;
+
+        for (int i = 0; i < A.length; i++) {
+            minPrice = Math.min(minPrice, A[i]);
+            maxProfit = Math.max(maxProfit, A[i] - minPrice);
         }
         return maxProfit;
     }
@@ -42,7 +48,7 @@ public class CarryForward {
     // Given an array A of length N, return the sub array from B to C.
     public ArrayList<Integer> subArrayFromBtoC(ArrayList<Integer> A, int B, int C) {
         ArrayList<Integer> arr = new ArrayList<Integer>();
-        for(int i=B;i<=C;i++) {
+        for (int i = B; i <= C; i++) {
             arr.add(A.get(i));
         }
         return arr;
@@ -52,11 +58,11 @@ public class CarryForward {
     // You are given an array A of N integers.
     // Return a 2D array consisting of all the sub arrays of the array
     public ArrayList<ArrayList<Integer>> allSubArrays(ArrayList<Integer> A) {
-        ArrayList<ArrayList<Integer>> arr= new ArrayList<ArrayList<Integer>>();
-        for(int i=0;i<A.size();i++){
-            for(int j=i;j<A.size();j++){
+        ArrayList<ArrayList<Integer>> arr = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < A.size(); i++) {
+            for (int j = i; j < A.size(); j++) {
                 ArrayList<Integer> ar = new ArrayList<>();
-                for(int k=i;k<=j;k++){
+                for (int k = i; k <= j; k++) {
                     ar.add(A.get(k));
                 }
                 arr.add(ar);
@@ -66,15 +72,16 @@ public class CarryForward {
     }
 
     // You have given a string A having Uppercase English letters.
-    //You have to find how many times subsequence "AG" is there in the given string.
+    // You have to find how many times subsequence "AG" is there in the given
+    // string.
     public int findSpecialSubsequence(String A) {
         int count = 0;
         int ans = 0;
-        for(int i=A.length()-1;i>=0;i--) {
-            if(A.charAt(i) == 'G') {
+        for (int i = A.length() - 1; i >= 0; i--) {
+            if (A.charAt(i) == 'G') {
                 count++;
             }
-            if(A.charAt(i) == 'A') {
+            if (A.charAt(i) == 'A') {
                 ans = ans + count;
             }
         }
