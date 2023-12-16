@@ -4,6 +4,34 @@ import java.util.ArrayList;
 
 public class CarryForward {
 
+    // You are given an integer array A of size N.
+    // You have to perform B operations. In one operation, you can remove either the
+    // leftmost or the rightmost element of the array A.
+    // Find and return the maximum possible sum of the B elements that were removed
+    // after the B operations.
+    // NOTE: Suppose B = 3, and array A contains 10 elements, then you can:
+    // Remove 3 elements from front and 0 elements from the back, OR
+    // Remove 2 elements from front and 1 element from the back, OR
+    // Remove 1 element from front and 2 elements from the back, OR
+    // Remove 0 elements from front and 3 elements from the back.
+    public int pickFromBothSides(ArrayList<Integer> A, int B) {
+        int n = A.size();
+        int b = B, b2 = B, i = 0, j = n - 1, sum = 0;
+        while (b > 0) {
+            sum = sum + A.get(i++);
+            b--;
+        }
+
+        int ans = sum;
+        while (b2 > 0) {
+            sum = sum - A.get(--i);
+            sum = sum + A.get(j--);
+            ans = Math.max(ans, sum);
+            b2--;
+        }
+        return ans;
+    }
+
     // Given an integer array A containing N distinct integers, you have to find all
     // the leaders in array A. An element is a leader if it is strictly greater than
     // all the elements to its right side.
