@@ -28,7 +28,7 @@ public class Searching2 {
     // 0 
     // Output 2:
     // 3
-    public int rotatedArrayArraySearch(final int[] A, int B) {
+    public int rotatedSortedArraySearch(final int[] A, int B) {
         int n = A.length;
         int l=0,r=n-1;
         while(l<=r) {
