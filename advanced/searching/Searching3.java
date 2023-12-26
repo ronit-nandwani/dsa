@@ -1,6 +1,68 @@
 package advanced.searching;
 
+import java.util.Arrays;
+
 public class Searching3 {
+    // Farmer John has built a new long barn with N stalls. Given an array of integers A of size N where each element of the array represents the location of the stall and an integer B which represents the number of cows.
+    //His cows don't like this barn layout and become aggressive towards each other once put into a stall. To prevent the cows from hurting each other, John wants to assign the cows to the stalls, such that the minimum distance between any two of them is as large as possible. What is the largest minimum distance?
+    //Problem Constraints
+    //2 <= N <= 100000
+    //0 <= A[i] <= 109
+    //2 <= B <= N
+    //Input Format
+    //The first argument given is the integer array A.
+    //The second argument given is the integer B.
+    //Output Format
+    //Return the largest minimum distance possible among the cows.
+    //Example Input
+    //Input 1:
+    //A = [1, 2, 3, 4, 5]
+    //B = 3
+    //Input 2:
+    //A = [1, 2]
+    //B = 2
+    //Example Output
+    //Output 1:
+    // 2
+    //Output 2:
+    //
+    // 1
+    //Example Explanation
+    //Explanation 1:
+    // John can assign the stalls at location 1, 3 and 5 to the 3 cows respectively. So the minimum distance will be 2.
+    //Explanation 2:
+    // The minimum distance will be 1.
+    //Expected Output
+    //Provide sample input and click run to see the correct output for the provided input. Use this to improve your problem understanding and test edge cases
+    public int maxCows(int D, int[] A) {
+        int count=1, l=A[0];
+        for(int i=0;i<A.length;i++) {
+            if((A[i]-l) >= D) {
+                count++;
+                l=A[i];
+            }
+        }
+        return count;
+    }
+    public int aggressiveCows(int[] A, int B) {
+        Arrays.sort(A);
+        int n = A.length;
+        int l=1,r=(A[n-1]-A[0]);
+        while(l <= r) {
+            int mid = l + (r-l)/2;
+            int count = maxCows(mid, A);
+            int count1 = maxCows(mid+1, A);
+            if(count == B && count1 < B) {
+                return mid;
+            }
+            if(count >= B) {
+                l=mid+1;
+            } else {
+                r=mid-1;
+            }
+        }
+        return r;
+    }
     public static long minPainter(long X, int B, int[] C) {
         long count = 1;
         long pTime = X;
