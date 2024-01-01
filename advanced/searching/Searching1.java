@@ -3,6 +3,55 @@ package advanced.searching;
 import java.util.Arrays;
 
 public class Searching1 {
+    // Given an array of integers A, find and return the peak element in it.
+    //An array element is considered a peak if it is not smaller than its neighbors. For corner elements, we need to consider only one neighbor.
+    //NOTE:
+    //It is guaranteed that the array contains only a single peak element.
+    //Users are expected to solve this in O(log(N)) time. The array may contain duplicate elements.
+    //Problem Constraints
+    //1 <= |A| <= 100000
+    //1 <= A[i] <= 109
+    //Input Format
+    //The only argument given is the integer array A.
+    //Output Format
+    //Return the peak element.
+    //Example Input
+    //Input 1:
+    //
+    //A = [1, 2, 3, 4, 5]
+    //Input 2:
+    //
+    //A = [5, 17, 100, 11]
+    //Example Output
+    //Output 1:
+    //
+    // 5
+    //Output 2:
+    //
+    // 100
+    //Example Explanation
+    //Explanation 1:
+    //
+    // 5 is the peak.
+    //Explanation 2:
+    //
+    // 100 is the peak.
+    public static int peakElement(int[] A) {
+        int n = A.length;
+        int l=0,r=n-1;
+        while(l<=r) {
+            int mid = (l+r)/2;
+            if((mid==0||A[mid-1]<=A[mid])&&(mid==n-1||A[mid+1]<=A[mid])) {
+                return A[mid];
+            }
+            if((mid==0)||(A[mid-1]<=A[mid])) {
+                l=mid+1;
+            } else {
+                r=mid-1;
+            }
+        }
+        return -1;
+    }
     // Given a sorted array of integers A where every element appears twice except for one element which appears once, find and return this single element that appears only once.
     // Elements which are appearing twice are adjacent to each other.
     // NOTE: Users are expected to solve this in O(log(N)) time.
@@ -170,9 +219,13 @@ public class Searching1 {
     }
     public static void main(String[] args) {
 
-        int[] arr = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
-        int b = 10;
-        // Expected Output: [118, 133]
-        System.out.println(Arrays.toString(searchRange(arr, b)));
+//        int[] arr = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
+//        int b = 10;
+//        // Expected Output: [118, 133]
+//        System.out.println(Arrays.toString(searchRange(arr, b)));
+
+        int[] arr = new int[]{1,1000000000,1000000000};
+
+        System.out.println(peakElement(arr));
     }
 }
