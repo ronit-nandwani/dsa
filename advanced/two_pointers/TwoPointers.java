@@ -1,6 +1,71 @@
 package advanced.two_pointers;
 
+import java.util.Arrays;
+
 public class TwoPointers {
+    // Given an one-dimensional integer array A of size N and an integer B.
+    //Count all distinct pairs with difference equal to B.
+    //Here a pair is defined as an integer pair (x, y), where x and y are both numbers in the array and their absolute difference is B.
+    //Problem Constraints
+    //1 <= N <= 104
+    //0 <= A[i], B <= 105
+    //Input Format
+    //First argument is an one-dimensional integer array A of size N.
+    //Second argument is an integer B.
+    //Output Format
+    //Return an integer denoting the count of all distinct pairs with difference equal to B.
+    //Example Input
+    //Input 1:
+    // A = [1, 5, 3, 4, 2]
+    // B = 3
+    //Input 2:
+    // A = [8, 12, 16, 4, 0, 20]
+    // B = 4
+    //Input 3:
+    // A = [1, 1, 1, 2, 2]
+    // B = 0
+    //Example Output
+    //Output 1:
+    // 2
+    //Output 2:
+    // 5
+    //Output 3:
+    // 2
+    //Example Explanation
+    //Explanation 1:
+    // There are 2 unique pairs with difference 3, the pairs are {1, 4} and {5, 2}
+    //Explanation 2:
+    // There are 5 unique pairs with difference 4, the pairs are {0, 4}, {4, 8}, {8, 12}, {12, 16} and {16, 20}
+    //Explanation 3:
+    // There are 2 unique pairs with difference 0, the pairs are {1, 1} and {2, 2}.
+    public static int pairsWithGivenDifference(int[] A, int B) {
+        Arrays.sort(A);
+        int i=0,j=1,count=0;
+        int n = A.length;
+        while(j<n) {
+            if((A[j]-A[i]) == B) {
+                count++;
+                int x=A[i], y=A[j];
+                while(i<n && A[i] == x) {
+                    i++;
+                }
+                while(j<n && A[j] == y) {
+                    j++;
+                }
+                if(j<n && i==j) {
+                    j++;
+                }
+            } else if((A[j]-A[i]) > B) {
+                i++;
+                if(i==j) {
+                    j++;
+                }
+            } else {
+                j++;
+            }
+        }
+        return count;
+    }
     // Given a sorted array of integers (not necessarily distinct) A and an integer B, find and return how many pair of integers ( A[i], A[j] ) such that i != j have sum equal to B.
     //Since the number of such pairs can be very large, return number of such pairs modulo (109 + 7).
     //Problem Constraints
@@ -61,8 +126,17 @@ public class TwoPointers {
         return (int)(count%1000000007);
     }
     public static void main(String[] args) {
-        int[] A = new int[]{1, 5, 7, 10};
-        // Expected Output: 1
-        System.out.println(pairsWithGivenSum(A,8));
+//        int[] A = new int[]{1, 5, 7, 10};
+//        // Expected Output: 1
+//        System.out.println(pairsWithGivenSum(A,8));
+
+//        int[] A = new int[]{1,2,3,4,5,6,7,8,9,10};
+//        int B = 1;
+//        // Expected Output: 1
+
+        int[] A = new int[]{8,5,1,10,5,9,9,3,5,6,6,2,8,2,2,6,3,8,7,2,5,3,4,3,3,2,7,9,6,8,7,2,9,10,3,8,10,6,5,4,2,3};
+        int B = 3;
+        // Expected Output: 7
+        System.out.println(pairsWithGivenDifference(A,B));
     }
 }
