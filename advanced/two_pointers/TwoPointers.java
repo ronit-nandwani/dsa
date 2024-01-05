@@ -3,6 +3,63 @@ package advanced.two_pointers;
 import java.util.Arrays;
 
 public class TwoPointers {
+    // Given an array of positive integers A and an integer B, find and return first continuous subarray which adds to B.
+    //If the answer does not exist return an array with a single integer "-1".
+    //First sub-array means the sub-array for which starting index in minimum.
+    //Problem Constraints
+    //1 <= length of the array <= 100000
+    //1 <= A[i] <= 109
+    //1 <= B <= 109
+    //Input Format
+    //The first argument given is the integer array A.
+    //The second argument given is integer B.
+    //Output Format
+    //Return the first continuous sub-array which adds to B and if the answer does not exist return an array with a single integer "-1".
+    //Example Input
+    //Input 1:
+    // A = [1, 2, 3, 4, 5]
+    // B = 5
+    //Input 2:
+    // A = [5, 10, 20, 100, 105]
+    // B = 110
+    //Example Output
+    //Output 1:
+    // [2, 3]
+    //Output 2:
+    // [-1]
+    //Example Explanation
+    //Explanation 1:
+    // [2, 3] sums up to 5.
+    //Explanation 2:
+    // No subarray sums up to required number.
+    public static int[] subArrayWithGivenSum(int[] A, int B) {
+        int n = A.length;
+        int i=0,j=0,sum=A[0];
+        while(j<n) {
+            if(sum == B) {
+                int k=i,l=0;
+                int e = j-i+1;
+                int[] arr = new int[e];
+                while(k<=j) {
+                    arr[l] = A[k];
+                    k++;
+                    l++;
+                }
+                return arr;
+            }
+            if(sum < B) {
+                j++;
+                if(j==n) {
+                    return new int[]{-1};
+                }
+                sum += A[j];
+            } else {
+                sum -= A[i];
+                i++;
+            }
+        }
+        return new int[]{-1};
+    }
     // Given an one-dimensional integer array A of size N and an integer B.
     //Count all distinct pairs with difference equal to B.
     //Here a pair is defined as an integer pair (x, y), where x and y are both numbers in the array and their absolute difference is B.
@@ -134,9 +191,13 @@ public class TwoPointers {
 //        int B = 1;
 //        // Expected Output: 1
 
-        int[] A = new int[]{8,5,1,10,5,9,9,3,5,6,6,2,8,2,2,6,3,8,7,2,5,3,4,3,3,2,7,9,6,8,7,2,9,10,3,8,10,6,5,4,2,3};
-        int B = 3;
-        // Expected Output: 7
-        System.out.println(pairsWithGivenDifference(A,B));
+//        int[] A = new int[]{8,5,1,10,5,9,9,3,5,6,6,2,8,2,2,6,3,8,7,2,5,3,4,3,3,2,7,9,6,8,7,2,9,10,3,8,10,6,5,4,2,3};
+//        int B = 3;
+//        // Expected Output: 7
+//        System.out.println(pairsWithGivenDifference(A,B));
+
+        int[] A = new int[]{1,2,3,4,5};
+        int B = 5;
+        System.out.println(Arrays.toString(subArrayWithGivenSum(A, B)));
     }
 }
