@@ -54,6 +54,78 @@ class SortByFactors implements Comparator<Integer> {
 }
 
 public class Sorting {
+    static long ic_c = 0;
+    static long mod = 1000000000 + 7;
+
+    public static void merge(int[] A, int l, int mid, int r) {
+        int[] ans = new int[r-l+1];
+        int i=l, j=mid+1, k=0;
+        while(i<=mid && j<=r) {
+            if(A[i] <= A[j]) {
+                ans[k] = A[i];
+                i++;
+            } else {
+                ic = (long)(ic + mid-i+1)%mod;
+                ans[k] = A[j];
+                j++;
+            }
+            k++;
+        }
+        while(i<= mid) {
+            ans[k] = A[i];
+            k++;i++;
+        }
+        while(j<= r) {
+            ans[k] = A[j];
+            k++;j++;
+        }
+
+        for(int ii = 0; ii < ans.length; ii++) {
+            A[ii+l]=ans[ii];
+        }
+    }
+
+    public static void mergeSort(int[] A, int l, int r) {
+        if(l>=r) return;
+        int mid = (l+r)/2;
+        mergeSort(A,l,mid);
+        mergeSort(A,mid+1,r);
+        merge(A, l, mid, r);
+    }
+
+    // Count Inversion Pair
+    // Given an array of integers A. If i < j and A[i] > A[j], then the pair (i, j) is called an inversion of A. Find the total number of inversions of A modulo (109 + 7).
+    //Problem Constraints
+    //1 <= length of the array <= 105
+    //1 <= A[i] <= 109
+    //Input Format
+    //The only argument given is the integer array A.
+    //Output Format
+    //Return the number of inversions of A modulo (109 + 7).
+    //Example Input
+    //Input 1:
+    //A = [1, 3, 2]
+    //Input 2:
+    //A = [3, 4, 1, 2]
+    //Example Output
+    //Output 1:
+    //1
+    //Output 2:
+    //4
+    //Example Explanation
+    //Explanation 1:
+    //The pair (1, 2) is an inversion as 1 < 2 and A[1] > A[2]
+    //Explanation 2:
+    //The pair (0, 2) is an inversion as 0 < 2 and A[0] > A[2]
+    //The pair (0, 3) is an inversion as 0 < 3 and A[0] > A[3]
+    //The pair (1, 2) is an inversion as 1 < 2 and A[1] > A[2]
+    //The pair (1, 3) is an inversion as 1 < 3 and A[1] > A[3]
+    public static int inversionCountInAnArray(int[] A) {
+        int n = A.length;
+        mergeSort(A,0,n-1);
+        return (int)ic_c;
+    }
+
     // Merge Two Sorted Arrays
     // Given two sorted integer arrays A and B, merge B and A as one sorted array and return it as an output.
     //Note: A linear time complexity is expected and you should avoid use of any library function.
@@ -127,8 +199,14 @@ public class Sorting {
     }
 
     public static void main(String[] args) {
-       int[] arr = {6,3,3,6,7,8,7,3,7};
-       // Expected Output: [3,3,3,6,6,7,7,7,8]
-       System.out.println(Arrays.toString(countSort(arr)));
+//        int[] arr = {6,3,3,6,7,8,7,3,7};
+//        // Expected Output: [3,3,3,6,6,7,7,7,8]
+//        System.out.println(Arrays.toString(countSort(arr)));
+
+
+        // Expected Output: 3
+        int[] arr = {45,10,15,25,50};
+        System.out.println(inversionCountInAnArray(arr));
+        System.out.println(ic_c);
     }
 }
