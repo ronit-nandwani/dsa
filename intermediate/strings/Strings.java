@@ -1,6 +1,42 @@
 package intermediate.strings;
 
 public class Strings {
+    // Count Occurences
+    // Find the number of occurrences of bob in string A consisting of lowercase English alphabets.
+    // Problem Constraints
+    // 1 <= |A| <= 1000
+    // Input Format
+    // The first and only argument contains the string A, consisting of lowercase English alphabets.
+    // Output Format
+    // Return an integer containing the answer.
+    // Example Input
+    // Input 1:
+    //  "abobc"
+    // Input 2:
+    //  "bobob"
+    // Example Output
+    // Output 1:
+    //  1
+    // Output 2:
+    //  2
+    // Example Explanation
+    // Explanation 1:
+    //  The only occurrence is at second position.
+    // Explanation 2:
+    //  Bob occures at first and third position.
+    public int countOccurences(String A) {
+        String targetString ="bob";
+        int occurance=0;
+        for (int i=0;i<A.length()-2;i++){
+            String subString=   A.substring(i,i+3);
+            if(targetString.equals(subString)){
+                    occurance++;
+            }
+        }
+        return occurance;
+    }
+
+
     // You are given two lowercase strings A and B each of length N. Return 1 if they are anagrams to each other and 0 if not.
     //Note : Two strings A and B are called anagrams to each other if A can be formed after rearranging the letters of B.
     //Problem Constraints
@@ -111,7 +147,7 @@ public class Strings {
     //A sequence of non-space characters constitutes a word.
     //Your reversed string should not contain leading or trailing spaces, even if it is present in the input string.
     //If there are multiple spaces between words, reduce them to a single space in the reversed string.
-    public String solve(String A) {
+    public String reverseStringWordByWord(String A) {
         String[] arr = A.split(" ");
         String ans = "";
         for(int i=arr.length-1;i>=0;i--) {
