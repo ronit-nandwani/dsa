@@ -12,6 +12,61 @@ class TreeNode {
     TreeNode(int x) { val = x; }
 }
 public class Trees1 {
+    // Binary Tree From Inorder And Preorder
+    // Given preorder and inorder traversal of a tree, construct the binary tree.
+    //NOTE: You may assume that duplicates do not exist in the tree.
+    //Problem Constraints
+    //1 <= number of nodes <= 105
+    //Input Format
+    //First argument is an integer array A denoting the preorder traversal of the tree.
+    //
+    //Second argument is an integer array B denoting the inorder traversal of the tree.
+    //Output Format
+    //Return the root node of the binary tree.
+    //Example Input
+    //Input 1:
+    //
+    // A = [1, 2, 3]
+    // B = [2, 1, 3]
+    //Input 2:
+    //
+    // A = [1, 6, 2, 3]
+    // B = [6, 1, 3, 2]
+    //Example Output
+    //Output 1:
+    //
+    //   1
+    //  / \
+    // 2   3
+    //Output 2:
+    //
+    //   1
+    //  / \
+    // 6   2
+    //    /
+    //   3
+    //
+    //Example Explanation
+    //Explanation 1:
+    // Create the binary tree and return the root node of the tree.
+    public TreeNode construct(HashMap<Integer, Integer> mapB, ArrayList<Integer> A, ArrayList<Integer> B, int isi, int iei, int psi, int pei){
+        if(isi > iei) return null;
+        TreeNode root = new TreeNode(A.get(psi));
+        int idx = -1;
+        idx = mapB.get(A.get(psi));
+        int countl = idx - isi;
+        root.left = construct(mapB, A, B, isi, idx - 1, psi + 1, psi + countl);
+        root.right = construct(mapB, A, B, idx + 1, iei, psi + countl + 1, pei);
+        return root;
+    }
+    public TreeNode buildTreee(ArrayList<Integer> A, ArrayList<Integer> B) {
+        int n = A.size();
+        HashMap<Integer, Integer> mapB = new HashMap<>();
+        for(int i = 0; i < B.size(); i++){
+            mapB.put(B.get(i), i);
+        }
+        return construct(mapB, A, B, 0, n - 1, 0, n - 1);
+    }
 
     // Post Order Traversal
     // Given a binary tree, return the Postorder traversal of its nodes values.
