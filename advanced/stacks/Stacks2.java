@@ -3,6 +3,111 @@ package advanced.stacks;
 import java.util.Stack;
 
 public class Stacks2 {
+    // Largest Rectangle in Histogram
+    // Given an array of integers A.
+    //A represents a histogram i.e A[i] denotes the height of the ith histogram's bar. Width of each bar is 1.
+    //Find the area of the largest rectangle formed by the histogram.
+    //Problem Constraints
+    //1 <= |A| <= 100000
+    //1 <= A[i] <= 10000
+    //Input Format
+    //The only argument given is the integer array A.
+    //Output Format
+    //Return the area of the largest rectangle in the histogram.
+    //Example Input
+    //Input 1:
+    // A = [2, 1, 5, 6, 2, 3]
+    //Input 2:
+    // A = [2]
+    //Example Output
+    //Output 1:
+    // 10
+    //Output 2:
+    // 2
+    //Example Explanation
+    //Explanation 1:
+    //The largest rectangle has area = 10 unit. Formed by A[3] to A[4].
+    //Explanation 2:
+    //Largest rectangle has area 2.
+    public int[] nearestSmallerLeft(int[] A) {
+        Stack<Integer> st = new Stack();
+        int n = A.length;
+        int[] ans = new int[n];
+
+        for(int i=0;i<n;i++) {
+            while(!st.isEmpty() && A[st.peek()] >= A[i]) {
+                st.pop();
+            }
+            if(st.isEmpty()) {
+                ans[i] = -1;
+            } else {
+                ans[i] = st.peek();
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+    public int[] nearestSmallerRight(int[] A) {
+        Stack<Integer> st = new Stack();
+        int n = A.length;
+        int[] ans = new int[n];
+
+        for(int i=n-1;i>=0;i--) {
+            while(!st.isEmpty() && A[st.peek()] >= A[i]) {
+                st.pop();
+            }
+            if(st.isEmpty()) {
+                ans[i] = -1;
+            } else {
+                ans[i] = st.peek();
+            }
+            st.push(i);
+        }
+        return ans;
+    }
+    public int largestRectangleArea(int[] A) {
+        int ans = 0;
+        int n = A.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        left = nearestSmallerLeft(A);
+        right = nearestSmallerRight(A);
+        for(int i=0; i<n;i++) {
+            int j = left[i];
+            int k = right[i];
+
+            if(k==-1) k=n;
+            ans = Math.max(ans, A[i]*(k-j-1));
+        }
+        return ans;
+    }
+    // Solution provided
+//    public int largestRectangleArea(int[] A) {
+//        Stack < Integer > stack = new Stack < Integer > ();
+//        int ans = -1, n = A.length;
+//        for (int i = 0; i < A.length; i++) {
+//            while (!stack.empty() && A[i] < A[stack.peek()]) {
+//                int ind = stack.peek();
+//                stack.pop();
+//                // (stack.peek()+1) is the left and (i-1) is the right boundary of the rectangle with height A[ind]
+//                if (!stack.empty())
+//                    ans = Math.max(ans, (i - stack.peek() - 1) * A[ind]);
+//                else ans = Math.max(ans, i * A[ind]);
+//            }
+//            stack.push(i);
+//        }
+//        while (!stack.empty()) {
+//            int ind = stack.peek();
+//            stack.pop();
+//            // (stack.peek()+1) is the left and (n-1) is the right boundary of the rectangle with height A[ind]
+//            if (!stack.empty())
+//                ans = Math.max(ans, (n - stack.peek() - 1) * A[ind]);
+//            else ans = Math.max(ans, (n) * A[ind]);
+//        }
+//        return ans;
+//    }
+
+
     // Nearest Smaller
     // Given an array A, find the nearest smaller element G[i] for every element A[i] in the array such that the element has an index smaller than i.
     // More formally,
