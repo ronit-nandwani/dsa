@@ -3,6 +3,56 @@ package advanced.maths;
 import java.util.HashMap;
 
 public class Maths1 {
+    // Mod Sum
+    // Given an array of integers A, calculate the sum of A [ i ] % A [ j ] for all possible i, j pairs. Return sum % (109 + 7) as an output.
+    //Problem Constraints
+    //1 <= length of the array A <= 105
+    //1 <= A[i] <= 103
+    //Input Format
+    //The only argument given is the integer array A.
+    //Output Format
+    //Return a single integer denoting sum % (109 + 7).
+    //Example Input
+    //Input 1:
+    // A = [1, 2, 3]
+    //Input 2:
+    // A = [17, 100, 11]
+    //Example Output
+    //Output 1:
+    // 5
+    //Output 2:
+    // 61
+    //Example Explanation
+    //Explanation 1:
+    // (1 % 1) + (1 % 2) + (1 % 3) + (2 % 1) + (2 % 2) + (2 % 3) + (3 % 1) + (3 % 2) + (3 % 3) = 5
+    public int modSum(int[] A) {
+        // Define a constant for modulo operation
+        int mod = 1000000007;
+
+        // Create an array to store the frequency of each element in A
+        int arr[] = new int[1001];
+
+        // Iterate through the input array A and update the frequency array arr
+        for (int i = 0; i < A.length; i++) {
+            arr[A[i]]++;
+            // System.out.println(arr[A[i]] +"ff");
+        }
+
+        // Initialize the answer variable to 0
+        int ans = 0;
+
+        // Iterate through the range [1, 1000] for both i and j
+        for (int i = 1; i < 1001; i++) {
+            for (int j = 1; j < 1001; j++) {
+                // Calculate the contribution to the answer using modulo arithmetic
+                ans += ((i % j) * arr[i] * arr[j]) % mod;
+                ans %= mod;
+            }
+        }
+
+        // Return the final answer
+        return ans;
+    }
     // Given an integer array A of size N. You have to delete one element such that the GCD(Greatest common divisor) of the remaining array is maximum.
     // Find the maximum value of GCD.
     // Duplicate method to find gcd below
