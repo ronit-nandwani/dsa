@@ -5,6 +5,52 @@ import java.util.ArrayList;
 import java.util.Deque;
 
 public class Trees2 {
+    // Height Balanced Tree
+    //     Given a root of binary tree A, determine if it is height-balanced.
+    // A height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+    // Problem Constraints
+    // 1 <= size of tree <= 100000
+    // Input Format
+    // First and only argument is the root of the tree A.
+    // Output Format
+    // Return 0 / 1 ( 0 for false, 1 for true ) for this problem.
+    // Example Input
+    // Input 1:
+    //     1
+    // / \
+    // 2   3
+    // Input 2:
+    //     1
+    //     /
+    //     2
+    //     /
+    // 3
+    // Example Output
+    // Output 1:
+    // 1
+    // Output 2:
+    // 0
+    // Example Explanation
+    // Explanation 1:
+    // It is a complete binary tree.
+    // Explanation 2:
+    // Because for the root node, left subtree has depth 2 and right subtree has depth 0. 
+    // Difference = 2 > 1.
+    int isBalanced = 1;
+    public int height(TreeNode root) {
+        if(root == null) return -1;
+        int lHeight = height(root.left);
+        int rHeight = height(root.right);
+        if(Math.abs(lHeight-rHeight)>1) {
+            isBalanced = 0;
+        }
+        return Math.max(lHeight,rHeight)+1;
+    }
+    public int isBalanced(TreeNode A) {
+        height(A);
+        return isBalanced;
+    }
+    
     // Right View of Binary Tree
     // Problem Description
     //Given a binary tree of integers denoted by root A. Return an array of integers representing the right view of the Binary tree.
