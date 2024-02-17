@@ -3,8 +3,138 @@ package advanced.trees;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.TreeMap;
 
+class Pair {
+    TreeNode node;
+    int distance;
+
+    public Pair(TreeNode node, int distance) {
+        this.node = node;
+        this.distance = distance;
+    }
+}
 public class Trees2 {
+    // Vertical Order Traversal
+    //     Given a binary tree, return a 2-D array with vertical order traversal of it. Go through the example and image for more details.
+    // NOTE: If 2 Tree Nodes shares the same vertical level then the one with lesser depth will come first.
+    // Problem Constraints
+    // 0 <= number of nodes <= 105
+    // Input Format
+    // First and only arument is a pointer to the root node of binary tree, A.
+    // Output Format
+    // Return a 2D array denoting the vertical order traversal of tree as shown.
+    // Example Input
+    // Input 1:
+    //     6
+    //     /   \
+    // 3     7
+    // / \     \
+    // 2   5     9
+    // Input 2:
+    //     1
+    //     /   \
+    // 3     7
+    // /       \
+    // 2         9
+    // Example Output
+    // Output 1:
+    // [
+    //     [2],
+    //     [3],
+    //     [6, 5],
+    //     [7],
+    //     [9]
+    // ]
+    // Output 2:
+    // [
+    //     [2],
+    //     [3],
+    //     [1],
+    //     [7],
+    //     [9]
+    // ]
+    // Example Explanation
+    // Explanation 1:
+    // First row represent the verical line 1 and so on.
+    public ArrayList<ArrayList<Integer>> verticalOrderTraversal(TreeNode root) {
+        TreeMap<Integer,ArrayList<TreeNode>> tm = new TreeMap<Integer,ArrayList<TreeNode>>();
+        Deque<Pair> q = new ArrayDeque<>();
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<ArrayList<Integer>>();
+        if(root == null) return ans;
+
+        q.add(new Pair(root, 0));
+        while(q.size() != 0) {
+            Pair x = q.removeFirst();
+            if(tm.containsKey(x.distance)) {
+                ArrayList<TreeNode> list = tm.get(x.distance);
+                list.add(x.node);
+                tm.put(x.distance, list);
+            } else {
+                ArrayList<TreeNode> list = new ArrayList<>();
+                list.add(x.node);
+                tm.put(x.distance, list);
+            }
+            if(x.node.left != null) {
+                q.addLast(new Pair(x.node.left,x.distance-1));
+            }
+            if(x.node.right != null) {
+                q.addLast(new Pair(x.node.right,x.distance+1));
+            }
+        }
+
+        for(int key : tm.keySet()) {
+            ArrayList<Integer> nodeList = new ArrayList<>();
+            for (TreeNode node : tm.get(key)) {
+                nodeList.add(node.val);
+            }
+            ans.add(nodeList);
+        }
+        return ans;
+    }
+    // Solution by them
+//     public ArrayList < ArrayList < Integer >> verticalOrderTraversal(TreeNode root) {
+//     ArrayList < ArrayList < Integer >> ans = new ArrayList < ArrayList < Integer >> ();
+
+//     ArrayList < Integer > ar = new ArrayList < Integer > ();
+//     if (root == null) {
+//       return ans;
+//     }
+
+//     TreeMap < Integer, ArrayList < Integer >> tm = new TreeMap < > ();
+//     Queue < Pair > q = new LinkedList < Pair > ();
+//     q.add(new Pair(root, 0));
+
+//     while (!q.isEmpty()) {
+//       Pair p = q.poll();
+//       int v = p.t.val;
+//       int x = p.x;
+//       ar = new ArrayList < Integer > ();
+//       if (tm.containsKey(x)) {
+//         ar = tm.get(x);
+//         ar.add(v);
+//       } else {
+//         ar.add(v);
+//       }
+
+//       tm.put(x, ar);
+//       if (p.t.left != null) {
+//         q.add(new Pair(p.t.left, x - 1));
+//       }
+//       if (p.t.right != null) {
+//         q.add(new Pair(p.t.right, x + 1));
+//       }
+//     }
+//     for (int x: tm.keySet()) {
+//       ArrayList < Integer > f = tm.get(x);
+//       ans.add(f);
+//     }
+//     return ans;
+//   }
+
+
     // Height Balanced Tree
     //     Given a root of binary tree A, determine if it is height-balanced.
     // A height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
@@ -50,7 +180,7 @@ public class Trees2 {
         height(A);
         return isBalanced;
     }
-    
+
     // Right View of Binary Tree
     // Problem Description
     //Given a binary tree of integers denoted by root A. Return an array of integers representing the right view of the Binary tree.
