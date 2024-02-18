@@ -12,8 +12,69 @@ class Pair {
         profit=y;
     }
 }
+class JobPair {
+    int startTime,endTime;
+    JobPair(int x,int y) {
+        startTime=x;
+        endTime=y;
+    }
+}
 public class Greedy {
+    // Finish Maximum Jobs (Scheduling)
+    // There are N jobs to be done, but you can do only one job at a time.
+    // Given an array A denoting the start time of the jobs and an array B denoting the finish time of the jobs.
+    // Your aim is to select jobs in such a way so that you can finish the maximum number of jobs.
+    // Return the maximum number of jobs you can finish.
+    // Problem Constraints
+    // 1 <= N <= 105
+    // 1 <= A[i] < B[i] <= 109
+    // Input Format
+    // The first argument is an integer array A of size N, denoting the start time of the jobs.
+    // The second argument is an integer array B of size N, denoting the finish time of the jobs.
+    // Output Format
+    // Return an integer denoting the maximum number of jobs you can finish.
+    // Example Input
+    // Input 1:
+    // A = [1, 5, 7, 1]
+    // B = [7, 8, 8, 8]
+    // Input 2:
+    // A = [3, 2, 6]
+    // B = [9, 8, 9]
+    // Example Output
+    // Output 1:
+    // 2
+    // Output 2:
+    // 1
+    // Example Explanation
+    // Explanation 1:
+    // We can finish the job in the period of time: (1, 7) and (7, 8).
+    // Explanation 2:
+    // Since all three jobs collide with each other. We can do only 1 job.
     
+    public int finishMaximumJobs(int[] A, int[] B) {
+        ArrayList<JobPair> jobs = new ArrayList<>();
+        int n = A.length;
+        for(int i = 0;i < n; i++) {
+            JobPair p = new JobPair(A[i],B[i]);
+            jobs.add(p);
+        }
+        Collections.sort(jobs,new Comparator<JobPair>(){
+            public int compare(JobPair a, JobPair b){
+             return a.endTime-b.endTime;
+         }
+        });
+        PriorityQueue <Integer> pq = new PriorityQueue<>();
+        int ans = 1;
+        int last = jobs.get(0).endTime;
+        for(int i=1;i<n;i++) {
+            JobPair p = jobs.get(i);
+            if(p.startTime>=last) {
+                ans++;
+                last = p.endTime;
+            }
+        }
+        return ans;
+    }
     // Free Cars
     // Given two arrays, A and B of size N. A[i] represents the time by which you can buy the ith car without paying any money.
     //B[i] represents the profit you can earn by buying the ith car. It takes 1 minute to buy a car, so you can only buy the ith car when the current time <= A[i] - 1.
