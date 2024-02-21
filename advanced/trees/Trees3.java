@@ -1,5 +1,7 @@
 package advanced.trees;
 
+import org.w3c.dom.Node;
+
 class TreeNode3 {
     int val;
     TreeNode3 left;
@@ -22,6 +24,134 @@ class MinMaxPair {
 }
 
 public class Trees3 {
+    // Delete a node in BST
+    
+    // Given a Binary Search Tree(BST) A. If there is a node with value B present in the tree delete it and return the tree.
+    // Note - If there are multiple options, always replace a node by its in-order predecessor
+    // Problem Constraints
+    // 2 <= No. of nodes in BST <= 105
+    // 1 <= value of nodes <= 109
+    // Each node has a unique value
+    // Input Format
+    // The first argument is the root node of a Binary Search Tree A.
+    // The second argument is the value B.
+
+
+    // Output Format
+    // Delete the given node if found and return the root of the BST.
+    // Example Input
+    // Input 1:
+    //             15
+    //         /    \
+    //         12      20
+    //         / \    /  \
+    //     10  14  16  27
+    //     /
+    //     8
+    //     B = 10
+    // Input 2:
+    //             8
+    //         / \
+    //         6  21
+    //         / \
+    //         1   7
+    //     B = 6
+    // Example Output
+    // Output 1:
+
+    //             15
+    //         /    \
+    //         12      20
+    //         / \    /  \
+    //     8  14  16  27
+    // Output 2:
+
+    //             8
+    //         / \
+    //         1  21
+    //         \
+    //             7
+
+    // Example Explanation
+    // Explanation 1:
+
+    // Node with value 10 is deleted 
+    // Explanation 2:
+    // Node with value 6 is deleted 
+    public TreeNode deleteNode(TreeNode root, int B) {
+        TreeNode curr = root;
+        TreeNode prev = null;
+        while(curr != null) {
+            if(curr.val == B) {
+                if(curr.left == null && curr.right == null) {
+                    if(prev == null) {
+                        root = null;
+                    } else if(prev.left == curr){
+                        prev.left = null;
+                    } else {
+                        prev.right = null;
+                    }
+                } else if (curr.left == null) {
+                if (prev == null) {
+                    root = curr.right; // Deleting root
+                } else if (prev.left == curr) {
+                    prev.left = curr.right;
+                } else {
+                    prev.right = curr.right;
+                }
+            } else if (curr.right == null) {
+                if (prev == null) {
+                    root = curr.left; // Deleting root
+                } else if (prev.left == curr) {
+                    prev.left = curr.left;
+                } else {
+                    prev.right = curr.left;
+                }
+            } else {
+                TreeNode temp = curr.left;
+                while(temp.right != null) {
+                    temp = temp.right;
+                }
+                curr.val = temp.val; // Copy successor's value
+
+                // Recursively delete successor (now with at most one child)
+                curr.left = deleteNode(curr.left, temp.val);
+            }
+            }
+            if(B < curr.val) {
+                prev = curr;
+                curr = curr.left;
+            } else {
+                prev = curr;
+                curr = curr.right;
+            }
+        }
+        return root;
+    }
+    // Solution by team
+    // public class Solution {
+    //     public TreeNode solve(TreeNode A, int B) {
+    //         if(A != null) 
+    //             if(B < A.val) 
+    //                 A.left = solve(A.left, B);                
+    //             else if(B > A.val) 
+    //                 A.right = solve(A.right, B);       
+    //             else{
+    //                 if(A.left == null && A.right == null) 
+    //                     return null;              
+    //                 if (A.left == null || A.right == null)
+    //                     return A.left != null ? A.left : A.right;           
+                                                                      
+    //                 TreeNode temp = A.left;                         
+    //                 while(temp.right != null) 
+    //                     temp = temp.right;  
+    //                 A.val = temp.val;                             
+    //                 A.left = solve(A.left, temp.val);		
+    //             }
+    //         return A;
+    //     }
+    // }
+
     // Valid Binary Search Tree
     // You are given a binary tree represented by root A. You need to check if it is a Binary Search Tree or not.
     // Assume a BST is defined as follows:
