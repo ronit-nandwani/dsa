@@ -3,6 +3,74 @@ package advanced.dp;
 import java.util.Scanner;
 
 public class DP1 {
+    // Stairs
+
+    // You are climbing a staircase and it takes A steps to reach the top.
+    // Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+    // Return the number of distinct ways modulo 1000000007
+    // Problem Constraints
+    // 1 <= A <= 105
+    // Input Format
+    // The first and the only argument contains an integer A, the number of steps.
+    // Output Format
+    // Return an integer, representing the number of ways to reach the top.
+    // Example Input
+    // Input 1:
+    // A = 2
+    // Input 2:
+    // A = 3
+    // Example Output
+    // Output 1:
+    // 2
+    // Output 2:
+    // 3
+    // Example Explanation
+    // Explanation 1:
+    // Distinct ways to reach top: [1, 1], [2].
+    // Explanation 2:
+    // Distinct ways to reach top: [1 1 1], [1 2], [2 1].
+    static int[] clarr = new int[1];
+    
+    public int climb(int A) {
+        if (A == 1) {
+            clarr[1] = 1;
+            return 1;
+        } else if (A == 2) {
+            clarr[1] = 2;
+            return 2;
+        }
+        if(clarr[A] != -1) return clarr[A];
+        clarr[A] = (climb(A-1)%1000000007 + climb(A-2)%1000000007)%1000000007;
+        return clarr[A];
+    }
+    public int climbStairs(int A) {
+        clarr = new int[A+1];
+        clarr[0]=0;
+        for(int i=1; i<clarr.length;i++) {
+            clarr[i] = -1;
+        }
+        return climb(A);
+    }
+    // Solution by team
+    // public class Solution {
+    //     int mod = 1000000007;
+    //       public int climbStairs(int A) {
+    //         int ways[] = new int[A + 1]; // ways[i] denotes the number of ways to reach the i'th step.
+        
+    //         if (A == 1)
+    //           return 1;
+        
+    //         ways[1] = 1;
+    //         ways[2] = 2;
+        
+    //         for (int i = 3; i <= A; i++) {
+    //           ways[i] = (ways[i - 1] + ways[i - 2])%mod;
+    //         }
+    //         return ways[A];
+    //       }
+    //     }
+
+
     // Fibonacci number
 
     //     Given a positive integer A, write a program to find the Ath Fibonacci number.
