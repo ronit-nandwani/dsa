@@ -3,6 +3,75 @@ package advanced.dp;
 import java.util.Scanner;
 
 public class DP1 {
+
+    // Minimum No. of squares
+
+    // Given an integer A. Return minimum count of numbers, sum of whose squares is equal to A.
+    // Problem Constraints
+    // 1 <= A <= 105
+    // Input Format
+    // First and only argument is an integer A.
+    // Output Format
+    // Return an integer denoting the minimum count.
+    // Example Input
+    // Input 1:
+    // A = 6
+    // Input 2:
+    // A = 5
+    // Example Output
+    // Output 1:
+    // 3
+    // Output 2:
+    // 2
+    // Example Explanation
+    // Explanation 1:
+    // Possible combinations are : (12 + 12 + 12 + 12 + 12 + 12) and (12 + 12 + 22).
+    // Minimum count of numbers, sum of whose squares is 6 is 3. 
+    // Explanation 2:
+
+    // We can represent 5 using only 2 numbers i.e. 12 + 22 = 5
+    public int countMinSquares(int A) {
+        int[] ans = new int[A+1];
+        for(int i=0;i<=A;i++) {
+            ans[i] = i;
+        }
+        ans[0] = 0;
+        for(int i=1; i<=A ;++i) {
+            for(int x=1;x*x<=i;++x) {
+                ans[i] = Math.min(ans[i],1+ans[i-x*x]);
+            }
+        }
+        return ans[A];
+    }
+    // Solution by team
+    // public class Solution {
+    //     public int countMinSquares(int n) {
+    //       int[] dp = new int[n + 1];
+      
+    //       // simple base case assignment
+    //       dp[0] = 0;
+    //       dp[1] = 1;
+      
+    //       //finding optimal answer for every 2<=i<=N in bottom-up manner
+    //       for (int i = 2; i <= n; i++) {
+      
+    //         //for i answer will be always less than equal to i.
+    //         //maximum possible number of squares : i = (1^1+1^1+1^1+.....+1^1, i times)
+    //         dp[i] = i;
+      
+    //         //Now identify from which number we have to make a direct jump to N so that the required answer is minimised.
+    //         //do this by considering every possible direct jump
+    //         //number of iterations will be <= sqrt(i)
+    //         for (int x = 1; x * x <= i; x++) {
+    //           dp[i] = Math.min(dp[i], 1 + dp[i - x * x]);
+    //         }
+    //       }
+      
+    //       //here we get our optimal answer
+    //       return dp[n];
+    //     }
+    //   }
+
     // Stairs
 
     // You are climbing a staircase and it takes A steps to reach the top.
