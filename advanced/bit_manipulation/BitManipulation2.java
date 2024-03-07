@@ -1,6 +1,113 @@
 package advanced.bit_manipulation;
 
 public class BitManipulation2 {
+    // Subarray OR
+    // You are given an array of integers A of size N.
+    // The value of a subarray is defined as BITWISE OR of all elements in it.
+    // Return the sum of value of all subarrays of A % 109 + 7.
+    // Problem Constraints
+    // 1 <= N <= 105
+    // 1 <= A[i] <= 108
+    // Input Format
+    // The first argument given is the integer array A.
+    // Output Format
+    // Return the sum of Value of all subarrays of A % 109 + 7.
+    // Example Input
+    // Input 1:
+    // A = [1, 2, 3, 4, 5]
+    // Input 2:
+    // A = [7, 8, 9, 10]
+    // Example Output
+    // Output 1:
+    // 71
+    // Output 2:
+    // 110
+    // Example Explanation
+    // Explanation 1:
+    // Value([1]) = 1
+    // Value([1, 2]) = 3
+    // Value([1, 2, 3]) = 3
+    // Value([1, 2, 3, 4]) = 7
+    // Value([1, 2, 3, 4, 5]) = 7
+    // Value([2]) = 2
+    // Value([2, 3]) = 3
+    // Value([2, 3, 4]) = 7
+    // Value([2, 3, 4, 5]) = 7
+    // Value([3]) = 3
+    // Value([3, 4]) = 7
+    // Value([3, 4, 5]) = 7
+    // Value([4]) = 4
+    // Value([4, 5]) = 5
+    // Value([5]) = 5
+    // Sum of all these values = 71
+    // Explanation 2:
+    // Sum of value of all subarray is 110.
+
+    // checking whether the index bit is set or not in val
+    int checkbit( int val, int index ) {
+        if( ( val&(1<<index) ) == 0 ) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+    public int subarrayOR(int[] A) {
+        int N = A.length;
+        long total_subarrays = (long) N * (N+1) / 2;
+        int mod = (int) 1e9 + 7; // int mod = 1000000007;
+        long count_subarray_with_one = 0;
+        long final_ans = 0;
+        // Iterate each bit from bit 0 to 31
+        for( int i=0; i<31; i++ ) {
+            long count_subarray_with_zeros = 0;
+            long consecutive_zeros = 0;
+           
+            // traverse each element of the array one by one
+            for( int j=0; j<N; j++ ) {
+                if ( checkbit( A[j], i) == 0 ) { // so ith is unset
+                    // Here we keep on increasing the count of consecutive 0's
+                    consecutive_zeros += 1;
+                }
+                else {  // so ith bit is set
+                    //as we get ith bit as 1 -> first we store our subarray count with ith bit as 0
+                    count_subarray_with_zeros += ( consecutive_zeros * (consecutive_zeros + 1) / 2 );
+                    // since we got -> ith bit is 1/set so some A[j]..
+                    // ..So for next A[j] -> our consecutive_zeros should be = 0
+                    consecutive_zeros = 0;
+                }
+            }
+            // after looping -> if there are consecutive_zeros at the end -> then also..
+            // ..we should add it in count_subarray_with_zeros
+            count_subarray_with_zeros +=  ( consecutive_zeros * (consecutive_zeros + 1) / 2 ) ;
+            count_subarray_with_one = total_subarrays - count_subarray_with_zeros;
+            final_ans +=  count_subarray_with_one * (1 << i) ; // only they will contribute
+        }
+        return  (int) (final_ans % mod) ;
+    }
+    // Solution by team
+    // public class Solution {
+    //     public int solve(int[] A) {
+    //         int n = A.length;
+    //         int[] idx = new int[32];
+    //         long ans = 0;
+    //         for (int i = 1; i <= n; ++i) {
+    //             long tmp = A[i - 1];
+    //             for (int j = 0; j <= 31; ++j) {
+    //                 long pw = 1 << j;
+    //                 if ((tmp & pw) != 0) { //if jth bit is set
+    //                     ans += pw * i; // add its contribution in ans for all subarrays ending at index i
+    //                     idx[j] = i; // store the index for next elements
+    //                 } else if (idx[j] != 0) // if jth bit is not set
+    //                 {
+    //                     ans += pw * idx[j]; // add its contribution in ans for all subarrays ending at index i using 
+    //                 } // the information of last element having jth bit set
+    //             }
+    //         }
+    //         return (int)(ans % 1000000007);
+    //     }
+    // }
+
 
     // Given an array A. For every pair of indices i and j (i != j), find the maximum A[i] & A[j].
     public int maximumAndPair(int[] A) {
