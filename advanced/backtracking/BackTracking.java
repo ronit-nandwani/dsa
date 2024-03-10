@@ -4,6 +4,79 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class BackTracking {
+    // Generate all parenthesis 2
+
+    // Given an integer A pairs of parentheses, write a function to generate all combinations of well-formed parentheses of length 2*A.
+    // Problem Constraints
+    // 1 <= A <= 10
+    // Input Format
+    // First and only argument is integer A.
+    // Output Format
+    // Return a sorted list of all possible parenthesis.
+    // Example Input
+    // Input 1:
+    // A = 3
+    // Input 2:
+    // A = 1
+    // Example Output
+    // Output 1:
+    // [ "((()))", "(()())", "(())()", "()(())", "()()()" ]
+    // Output 2:
+    // [ "()" ]
+    // Example Explanation
+    // Explanation 1:
+    // All paranthesis are given in the output list.
+    // Explanation 2:
+    // All paranthesis are given in the output list.
+    ArrayList<String> list=new ArrayList<>();
+    public ArrayList<String> generateParenthesis(int A) {
+        generate(new StringBuilder(""),0,0,A);
+        return list;
+    }
+    void generate(StringBuilder curr,int countOpen, int countClose,int n){
+        if(countClose == countOpen && countOpen==n){
+            list.add(curr.toString());
+            return;
+        }
+        if(countOpen>n && countClose>countOpen){
+            return;
+        }
+        if(countOpen<n){
+            curr.append("(");
+            generate(curr,countOpen+1,countClose,n);
+            curr.deleteCharAt(curr.length()-1);
+        }
+        if(countClose<countOpen){
+            curr.append(")");
+            generate(curr,countOpen,countClose+1,n);
+            curr.deleteCharAt(curr.length()-1);
+        }
+    }
+    // Solution by team
+    // public class Solution {
+    //     ArrayList < String > ans;
+    //     // cnt denotes remaining open brackets (
+    //     // dif denotes the difference between open and closed brackets
+    //     void solve(int cnt, int dif, int n, String s) {
+    //         if (n == 0) {
+    //             ans.add(s);
+    //             return;
+    //         }
+    //         // Now we have 2 options. We can either add '(' to the string or add ')' to the string. 
+    //         // Option 1. Add '(' 
+    //         if (cnt > 0)
+    //             solve(cnt - 1, dif + 1, n - 1, s + '(');
+    //         // Option 2. Add ')'
+    //         if (dif > 0)
+    //             solve(cnt, dif - 1, n - 1, s + ')');
+    //     }
+    //     public ArrayList < String > generateParenthesis(int A) {
+    //         ans = new ArrayList < > ();
+    //         solve(A, 0, 2 * A, "");
+    //         return ans;
+    //     }
+    // }
+
     // Helper function for subsets
     public static void findAllSubsets(ArrayList<Integer> A, int i, ArrayList<Integer> currSet, ArrayList<ArrayList<Integer>> ans) {
         if(i==A.size()) {
