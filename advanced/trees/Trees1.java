@@ -12,6 +12,86 @@ class TreeNode {
     TreeNode(int x) { val = x; }
 }
 public class Trees1 {
+    // Binary tree from Inorder and postorder
+    // Given the inorder and postorder traversal of a tree, construct the binary tree.
+    // NOTE: You may assume that duplicates do not exist in the tree.
+    // Problem Constraints
+    // 1 <= number of nodes <= 105
+    // Input Format
+    // First argument is an integer array A denoting the inorder traversal of the tree.
+    // Second argument is an integer array B denoting the postorder traversal of the tree.
+    // Output Format
+    // Return the root node of the binary tree.
+    // Example Input
+    // Input 1:
+    // A = [2, 1, 3]
+    // B = [2, 3, 1]
+    // Input 2:
+    // A = [6, 1, 3, 2]
+    // B = [6, 3, 2, 1]
+    // Example Output
+    // Output 1:
+    // 1
+    // / \
+    // 2   3
+    // Output 2:
+    // 1  
+    // / \
+    // 6   2
+    //     /
+    // 3
+    // Example Explanation
+    // Explanation 1:
+    // Create the binary tree and return the root node of the tree.
+
+    HashMap<Integer, Integer> hm1;
+    public TreeNode buildTreeFromInAndPost(int[] in, int[] post, int inL, int inR, int postR) {
+        if(inL > inR) return null;
+        TreeNode root = new TreeNode(post[postR]);
+
+        int idx = hm1.get(root.val);
+        int cntR = inR - idx;
+
+        root.left = buildTreeFromInAndPost(in, post, inL, idx - 1, postR - cntR - 1);
+        root.right = buildTreeFromInAndPost(in, post, idx+1, inR, postR - 1);
+        return root;
+    }
+    public TreeNode buildTreeFromInandPost(int[] A, int[] B) {
+        hm1 = new HashMap<>();
+        for(int i=0;i<A.length;i++) {
+            hm1.put(A[i], i);
+        }
+        return buildTreeFromInAndPost(A, B, 0, A.length-1, A.length-1);
+    }
+    // Solution by team
+    // public TreeNode buildTree(ArrayList<Integer> inorder, ArrayList<Integer> postorder) {
+	//     if (inorder == null || postorder == null || inorder.size() == 0 || inorder.size() != postorder.size())
+	//         return null;
+	//     TreeNode root;
+	//     int n = inorder.size();
+	    
+	//     root = rec(inorder, postorder, 0, n - 1, n - 1);
+	    
+	//     return root;
+	    
+	// }
+	
+	// public TreeNode rec(ArrayList<Integer> inorder, ArrayList<Integer> postorder, int start, int end, int postIndex) {
+	//     if (start > end)
+	//         return null;
+	//     TreeNode node;
+	//     int nodeVal = postorder.get(postIndex);
+	//     node = new TreeNode(nodeVal);
+	//     int i;
+	//     for (i = start; i <= end; i++) {
+	//         if (inorder.get(i) == nodeVal)
+	//             break;
+	//     }
+	//     node.left = rec(inorder, postorder, start, i - 1, postIndex - (end - i + 1));
+	//     node.right = rec(inorder, postorder, i + 1, end, postIndex - 1);
+	//     return node;
+	// }
+
     // Binary Tree From Inorder And Preorder
     // Given preorder and inorder traversal of a tree, construct the binary tree.
     //NOTE: You may assume that duplicates do not exist in the tree.
