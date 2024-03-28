@@ -5,6 +5,72 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Hashing2 {
+    // Longest SubArray Zero Sum
+
+    // Given an array A of N integers.
+    // Find the length of the longest subarray in the array which sums to zero.
+    // If there is no subarray which sums to zero then return 0.
+    // Problem Constraints
+    // 1 <= N <= 105
+    // -109 <= A[i] <= 109
+    // Input Format
+    // Single argument which is an integer array A.
+    // Output Format
+    // Return an integer.
+    // Example Input
+    // Input 1:
+    // A = [1, -2, 1, 2]
+    // Input 2:
+    // A = [3, 2, -1]
+    // Example Output
+    // Output 1:
+    // 3
+    // Output 2:
+    // 0
+    // Example Explanation
+    // Explanation 1:
+    // [1, -2, 1] is the largest subarray which sums up to 0.
+    // Explanation 2:
+    // No subarray sums up to 0.
+
+    public int solve(int[] A) {
+        long pf = 0;
+        HashMap<Long,Integer> hm = new HashMap<Long,Integer>();
+        int ans = 0;
+
+        for(int i=0;i<A.length;i++) {
+            pf = pf+(long)A[i];
+            if(pf == 0) {
+                ans = i+1;
+            }
+            if(hm.containsKey(pf)) {
+                ans = Math.max(ans, i - hm.get(pf));
+            } else {
+                hm.put(pf,i);
+            }
+        }
+        return ans;
+    }
+    // Solution by team
+    // public class Solution {
+    //     public int solve(int[] A) {
+    //         HashMap<Long, Integer> pref = new HashMap<Long, Integer>();
+    //         Long curr = 0L;
+    //         int ans = 0;
+    //         pref.put(0L, 0);
+    //         for(int i = 1 ; i <= A.length ; i++){
+    //             curr += A[i - 1];
+    //             if(pref.containsKey(curr)){
+    //                 ans = Math.max(ans, i - pref.get(curr));
+    //             }
+    //             else{
+    //                 pref.put(curr, i);
+    //             }
+    //         }
+    //         return ans;
+    //     }
+    // }
+
     // Count Pair Sum
 
     // You are given an array A of N integers and an integer B. Count the number of pairs (i,j) such that A[i] + A[j] = B and i ≠ j.
