@@ -1,6 +1,241 @@
 package advanced.linkedlist;
 
+import java.util.HashMap;
+
 public class LinkedList3 {
+    // LRU Cache
+    // Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and set.
+
+    // get(key) - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+    // set(key, value) - Set or insert the value if the key is not already present. When the cache reaches its capacity, it should invalidate the least recently used item before inserting the new item.
+    // The LRUCache will be initialized with an integer corresponding to its capacity. Capacity indicates the maximum number of unique keys it can hold at a time.
+
+    // Definition of "least recently used" : An access to an item is defined as a get or a set operation of the item. "Least recently used" item is the one with the oldest access time.
+
+    // NOTE: If you are using any global variables, make sure to clear them in the constructor.
+
+    // Example :
+
+    // Input : 
+    //         capacity = 2
+    //         set(1, 10)
+    //         set(5, 12)
+    //         get(5)        returns 12
+    //         get(1)        returns 10
+    //         get(10)       returns -1
+    //         set(6, 14)    this pushes out key = 5 as LRU is full. 
+    //         get(5)        returns -1 
+    HashMap<Integer,ListNode> hm = new HashMap();
+    class ListNode {
+        int key;
+      int value;
+      ListNode prev,next;
+      ListNode(int x, int y) { this.key = x; this.value=y; prev = null; next = null;}
+    };
+    ListNode head = new ListNode(-1,-1);
+    ListNode tail = new ListNode(-1,-1);
+    int capacity;
+    public void Solution(int capacity) {
+        head.next = tail;
+        tail.prev=head;
+        this.capacity = capacity;
+    }
+    
+    public int get(int key) {
+        // Check if the key is present in the cache.
+        if (hm.containsKey(key)) {
+
+            // Need to update the key-node to recently used.
+
+            // Step 1: Get the key-node address and delete it.
+            ListNode temp = hm.get(key);
+            remove(temp);
+
+            // Step 2: Insert the key address again so it becomes the recently used node.
+            insert(temp);
+
+            // Return the value of the key.
+            return temp.value;
+
+        } else {
+            // If the key is not present, return -1.
+            return -1;
+        }
+    }
+    
+    public void set(int key, int value) {
+        // Check if the key is already present in the cache.
+        if (hm.containsKey(key)) {
+
+            // Remove the existing node.
+            ListNode temp = hm.get(key);
+            remove(temp);
+        }
+
+        // Check if the cache capacity is not full.
+        if (hm.size() == capacity) {
+
+            // Remove the first node after the default head.
+            remove(head.next);
+        }
+
+        // Create a new node.
+        ListNode newNode = new ListNode(key, value);
+
+        // Insert the new node into the cache.
+        insert(newNode);
+    }
+
+    // Remove method.
+    private void remove(ListNode node) {
+
+        // First remove from the cache map.
+        hm.remove(node.key);
+
+        // Get the previous and next nodes of the given node.
+        ListNode tP = node.prev; // tP: previous node of the given node
+        ListNode tN = node.next; // tN: next node of the given node
+
+        // Connect tP to tN.
+            tP.next = tN;
+            tN.prev = tP;
+
+        // Disconnect the node.
+        node.next = null;
+        node.prev = null;
+    }
+
+    // Insert method for making a node recently used in the cache.
+    private void insert(ListNode node) {
+
+        // Insert in the cache map.
+        hm.put(node.key, node);
+
+        // Get the previous node of the tail.
+        if(tail != null) {
+            ListNode temp = tail.prev;
+
+            // Connect the node to temp and tail.
+            node.prev = temp;
+            node.next = tail;
+
+            // Connect temp to the node.
+            temp.next = node;
+
+            // Connect tail to the node.
+            tail.prev = node;
+        }
+    }
+    // Solution by team
+    // static class Node {
+    //     int key;
+    //     int val;
+    //     Node prev, next;
+    //     public Node(int key, int val) {
+    //         this.key = key;
+    //         this.val = val;
+    //     }
+    // }
+    
+    // Node head;
+    // Node tail;
+    // int N;
+    // int MAX;
+    // HashMap<Integer, Node> mMap;
+    
+    // public void updateAccessList(Node node){
+    //     Node temp = node.prev;
+    //     temp.next = node.next;
+    //     temp = node.next;
+    //     if (temp != null)
+    //         temp.prev = node.prev;
+            
+    //     node.next = head;
+    //     head.prev = node;
+    //     node.prev = null;
+    //     head = node;
+    // }
+    
+    // public Solution(int capacity) {
+    //     head = null;
+    //     tail = null;
+    //     MAX = capacity;
+    //     N = 0;
+    //     mMap = new HashMap<>();
+    // }
+    
+    // public int get(int key) {
+    //     if (N == 0)
+    //         return -1;
+        
+    //     if (mMap.containsKey(key)) {
+    //         Node node = mMap.get(key);
+            
+    //         if (key == head.key) {
+    //             return node.val;
+    //         }
+    //         if (tail.key == key) {
+    //             tail = tail.prev;
+    //         }
+            
+    //         updateAccessList(node);
+            
+    //         return node.val;
+    //     }
+        
+        
+    //     return -1;
+    // }
+    
+    // public void set(int key, int value) {
+        
+    //     if (mMap.containsKey(key)) {
+            
+    //         Node node = mMap.get(key);
+            
+    //         if (node.key == head.key) {
+    //             node.val = value;
+    //             return;
+    //         }
+            
+    //         if (tail.key == key) {
+    //             tail = tail.prev;
+    //         }
+            
+    //         updateAccessList(node);
+            
+    //         node.val = value;
+            
+    //         return;
+    //     }
+        
+    //     if (N == MAX) {
+    //         if (tail != null) {
+    //             mMap.remove(tail.key);
+    //             tail = tail.prev;
+                
+    //             if (tail != null) {
+    //                 tail.next.prev = null;
+    //                 tail.next = null;
+    //             }
+    //             N--;
+    //         }
+    //     }
+        
+    //     Node node = new Node(key, value);
+    //     node.next = head;
+    //     if (head != null)
+    //         head.prev = node;
+    
+    //     head = node;
+    //     N++;
+        
+    //     if (N == 1)
+    //         tail = head;
+        
+    //     mMap.put(key, node);    
+    // }
+
     // Intersection of LinkedLists
     // Write a program to find the node at which the intersection of two singly linked lists, A and B, begins. For example, the following two linked lists:
 
