@@ -1,8 +1,122 @@
 package advanced.linkedlist;
 
 import java.util.HashMap;
+ class ListNode1 {
+      public int val;
+      public ListNode1 next;
+      ListNode1(int x) { val = x; next = null; }
+}
 
 public class LinkedList3 {
+    // Partition List
+    // Given a linked list A and a value B, partition it such that all nodes less than B come before nodes greater than or equal to B.
+
+    // You should preserve the original relative order of the nodes in each of the two partitions.
+
+    // Problem Constraints
+    // 1 <= |A| <= 106
+
+    // 1 <= A[i], B <= 109
+
+    // Input Format
+    // The first argument of input contains a pointer to the head to the given linked list.
+
+    // The second argument of input contains an integer, B.
+
+    // Output Format
+    // Return a pointer to the head of the modified linked list.
+
+    // Example Input
+    // Input 1:
+
+    // A = [1, 4, 3, 2, 5, 2]
+    // B = 3
+    // Input 2:
+
+    // A = [1, 2, 3, 1, 3]
+    // B = 2
+
+    // Example Output
+    // Output 1:
+
+    // [1, 2, 2, 4, 3, 5]
+    // Output 2:
+
+    // [1, 1, 2, 3, 3]
+
+    // Example Explanation
+    // Explanation 1:
+
+    // [1, 2, 2] are less than B wheread [4, 3, 5] are greater than or equal to B.
+    // Explanation 2:
+
+    // [1, 1] are less than B wheread [2, 3, 3] are greater than or equal to B.
+    public ListNode1 partition(ListNode1 A, int B) {
+        ListNode1 curr = A;
+        ListNode1 less = new ListNode1(-1);
+        ListNode1 l1 = less;
+        ListNode1 great = new ListNode1(-1);
+        ListNode1 g1 = great;
+
+        while(curr != null){
+
+            if(curr.val < B){
+                less.next = curr;
+                less = less.next;
+                curr = curr.next;
+            }
+            else if(curr.val >= B){
+                great.next = curr;
+                great = great.next;
+                curr = curr.next;
+            }
+        }
+        great.next = null;
+        less.next = g1.next;
+        return l1.next;
+    }
+    // Solution by team
+    // public ListNode partition(ListNode A, int B) {
+    //     ListNode lessPrev = null;
+    //     ListNode greaterPrev = null;
+    //     ListNode head = A;
+    //     ListNode greaterHead = null;
+    //     while (A != null) {
+    //         if (A.val < B) {
+    //             // contains the node with value < B
+    //             if (lessPrev != null) {
+    //                 // append A to the list
+    //                 lessPrev.next = A;
+    //                 lessPrev = A;
+    //             } else {
+    //                 // A is the starting node
+    //                 lessPrev = A;
+    //                 head = A;
+    //             }
+    //         } else {
+    //             // contains the node with value >= B
+    //             if (greaterPrev != null) {
+    //                 // append A to the list
+    //                 greaterPrev.next = A;
+    //                 greaterPrev = A;
+    //             } else {
+    //                 // A is the starting node
+    //                 greaterPrev = A;
+    //                 greaterHead = A;
+    //             }
+    //         }
+    //         A = A.next;
+    //     }
+    //     if (greaterPrev != null)
+    //         greaterPrev.next = null;
+    //     if (lessPrev != null) {
+    //         lessPrev.next = greaterHead;
+    //     }
+    //     return head;
+    // }
+
+
+
     // LRU Cache
     // Design and implement a data structure for Least Recently Used (LRU) cache. It should support the following operations: get and set.
 
