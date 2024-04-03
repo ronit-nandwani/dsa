@@ -7,7 +7,138 @@ import java.util.HashMap;
       ListNode1(int x) { val = x; next = null; }
 }
 
+class ListNode2 {
+    int val;
+    ListNode2 right, down;
+    ListNode2(int x) {
+        val = x;
+        right = down = null;
+    }
+}
+
 public class LinkedList3 {
+    // Flatten a LL
+    // Given a linked list where every node represents a linked list and contains two pointers of its type:
+
+    // Pointer to next node in the main list (right pointer)
+    // Pointer to a linked list where this node is head (down pointer). All linked lists are sorted.
+    // You are asked to flatten the linked list into a single list. Use down pointer to link nodes of the flattened list. The flattened linked list should also be sorted.
+
+    // Problem Constraints
+    // 1 <= Total nodes in the list <= 100000
+
+    // 1 <= Value of node <= 109
+
+    // Input Format
+    // The only argument given is head pointer of the doubly linked list.
+
+    // Output Format
+    // Return the head pointer of the Flattened list.
+
+    // Example Input
+    // Input 1:
+
+    // 3 -> 4 -> 20 -> 20 ->30
+    // |    |    |     |    |
+    // 7    11   22    20   31
+    // |               |    |
+    // 7               28   39
+    // |               |
+    // 8               39
+    // Input 2:
+
+    // 2 -> 4 
+    // |    |       
+    // 7    11    
+    // |            
+    // 7
+
+    // Example Output
+    // Output 1:
+
+    // 3 -> 4 -> 7 -> 7 -> 8 -> 11 -> 20 -> 20 -> 20 -> 22 -> 28 -> 30 -> 31 -> 39 -> 39 
+    // Output 2:
+
+    // 2 -> 4 -> 7 -> 7 -> 11
+
+    // Example Explanation
+    // Explanation 1:
+
+    // The return linked list is the flatten sorted list.
+    
+    // Recurvise Solution
+
+
+    // ListNode2 flatten(ListNode2 root) {
+//     if (root == null || root.right == null) {
+//             return root;
+//         }
+
+//         // Recursively flatten the lists
+//         root.right = flatten(root.right);
+
+//         // Merge the flattened lists
+//         root = mergeLists(root, root.right);
+
+//         return root;
+// }
+
+// private ListNode2 mergeLists(ListNode2 a, ListNode2 b) {
+//     if (a == null) {
+//         return b;
+//     }
+//     if (b == null) {
+//         return a;
+//     }
+
+//     ListNode2 result;
+
+//     if (a.val < b.val) {
+//         result = a;
+//         result.down = mergeLists(a.down, b);
+//     } else {
+//         result = b;
+//         result.down = mergeLists(a, b.down);
+//     }
+
+//     return result;
+// }
+
+// Iterative Solution
+
+ListNode2 flatten(ListNode2 root) { // this problem is very similar to merge 2 sorted LL but instead of 2 we have a list of lists. 
+    ListNode2 dummy= new ListNode2(0); 
+    ListNode2 h1=root;
+    ListNode2 h2=h1.right;
+    if(h1==null || h2==null) return h1; 
+    while(h2!=null){
+        ListNode2 temp = h2.right; 
+        dummy.down= mergeSortedLL(h1,h2);
+        h1=dummy.down; 
+        h2=temp; 
+    }
+    return dummy.down; 
+}
+private ListNode2 mergeSortedLL(ListNode2 r1, ListNode2 r2){
+    ListNode2 dummyLocal = new ListNode2(-1), tr1=r1, tr2=r2, temp=dummyLocal; 
+    while(tr1!=null && tr2!=null){
+        if(tr1.val>tr2.val){
+            temp.down=tr2;
+            tr2=tr2.down; 
+        }
+        else{
+            temp.down=tr1; 
+            tr1=tr1.down;
+        }
+        temp=temp.down; 
+    }
+    if(tr1==null) temp.down=tr2; 
+    if(tr2==null) temp.down=tr1; 
+    return dummyLocal.down; 
+}
+
+
+
     // Partition List
     // Given a linked list A and a value B, partition it such that all nodes less than B come before nodes greater than or equal to B.
 
