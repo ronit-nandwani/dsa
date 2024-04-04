@@ -1,6 +1,82 @@
 package advanced.arrays;
 
+import java.util.HashMap;
+
 public class ArraysLeetCode {
+
+    // 1248. Count Number of Nice Subarrays
+    // Given an array of integers nums and an integer k. A continuous subarray is called nice if there are k odd numbers on it.
+
+    // Return the number of nice sub-arrays.
+    // Example 1:
+
+    // Input: nums = [1,1,2,1,1], k = 3
+    // Output: 2
+    // Explanation: The only sub-arrays with 3 odd numbers are [1,1,2,1] and [1,2,1,1].
+    // Example 2:
+
+    // Input: nums = [2,4,6], k = 1
+    // Output: 0
+    // Explanation: There are no odd numbers in the array.
+    // Example 3:
+
+    // Input: nums = [2,2,2,1,2,2,1,2,2,2], k = 2
+    // Output: 16
+
+    // Constraints:
+
+    // 1 <= nums.length <= 50000
+    // 1 <= nums[i] <= 10^5
+    // 1 <= k <= nums.length
+    public int numberOfSubarrays(int[] nums, int goal) {
+            
+            for(int i=0;i<nums.length;i++)
+            {
+                nums[i]=nums[i] & 1;
+            }
+        HashMap<Integer, Integer> sum = new HashMap<>();
+        sum.put(0, 1);
+        int total = 0;
+        int ans = 0;
+        for (int n : nums) {
+            total += n;
+            if (sum.containsKey(total - goal)) {
+                int nooftimes = sum.get(Math.abs(total - goal));
+                ans += nooftimes;
+
+            }
+            sum.put(total, sum.getOrDefault(total, 0) + 1);
+
+        }
+        return ans;
+
+        }
+
+        // or with less tc
+        // more optimized solution
+        // public int numberOfSubarrays(int[] nums, int k) {
+        //     for (int i = 0; i < nums.length; i++) {
+        //         nums[i] %= 2;
+        //     }
+            
+        //     int[] prefixCount = new int[nums.length + 1];
+        //     prefixCount[0] = 1;
+        //     int s = 0;
+        //     int ans = 0;
+            
+        //     for (int num : nums) {
+        //         s += num;
+        //         if (s >= k) {
+        //             ans += prefixCount[s - k];
+        //         }
+        //         prefixCount[s]++;
+        //     }
+            
+        //     return ans;
+        // }
+
+
+
 
     // 1052. Grumpy Bookstore Owner - Sliding Window
     // There is a bookstore owner that has a store open for n minutes. Every minute, some number of customers enter the store. You are given an integer array customers of length n where customers[i] is the number of the customer that enters the store at the start of the ith minute and all those customers leave after the end of that minute.
