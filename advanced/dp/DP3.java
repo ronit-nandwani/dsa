@@ -1,8 +1,165 @@
 package advanced.dp;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class DP3 {
+    // Fractional Knapsack
+    // Given two integer arrays A and B of size N each which represent values and weights associated with N items respectively.
+
+    // Also given an integer C which represents knapsack capacity.
+
+    // Find out the maximum total value that we can fit in the knapsack. If the maximum total value is ans, then return ⌊ans × 100⌋ , i.e., floor of (ans × 100).
+
+    // NOTE:
+
+    // You can break an item for maximizing the total value of the knapsack
+
+
+    // Problem Constraints
+    // 1 <= N <= 105
+
+    // 1 <= A[i], B[i] <= 103
+
+    // 1 <= C <= 103
+
+
+
+    // Input Format
+    // First argument is an integer array A of size N denoting the values on N items.
+
+    // Second argument is an integer array B of size N denoting the weights on N items.
+
+    // Third argument is an integer C denoting the knapsack capacity.
+
+
+
+    // Output Format
+    // Return a single integer denoting the maximum total value of A such that sum of the weights of this subset is smaller than or equal to C.
+
+
+
+    // Example Input
+    // Input 1:
+
+    // A = [60, 100, 120]
+    // B = [10, 20, 30]
+    // C = 50
+    // Input 2:
+
+    // A = [10, 20, 30, 40]
+    // B = [12, 13, 15, 19]
+    // C = 10
+
+
+    // Example Output
+    // Output 1:
+
+    // 24000
+    // Output 2:
+
+    // 2105
+
+
+    // Example Explanation
+    // Explanation 1:
+
+    // Taking the full items with weight 10 and 20 and 2/3 of the item with weight 30 will give us 
+    // the maximum value i.e 60 + 100 + 80 = 240. So we return 24000.
+    // Explanation 2:
+
+    // Taking 10/19 the fourth item gives us the maximum value i.e. 21.0526. So we return 2105.
+    public class SolutionCake {
+        public static class cake {
+            int weight;
+            int value;
+            double vpw;
+            cake(int weight, int value) {
+                this.weight = weight;
+                this.value = value;
+                this.vpw = value*1.0/weight;
+            }
+        }
+        public  int solve(int[] A, int[] B, int C) {
+            cake[] cakes = new cake[A.length];
+            int n = A.length;
+            for(int i=0;i<n;i++) {
+                cakes[i] = new cake(B[i],A[i]);
+            }
+            Arrays.sort(cakes,new Comparator<cake>(){
+                public int compare(cake c1, cake c2) {
+                    if(c1.vpw > c2.vpw) {
+                        return -1;
+                    }
+                    return 1;
+                }
+            });
+            double ans =0;
+            for(int i=0;i<n;i++) {
+                if(cakes[i].weight <= C) {
+                    ans += cakes[i].value;
+                    C -= cakes[i].weight;
+                }
+                else {
+                    ans += cakes[i].vpw * C;
+                    break;
+                }
+            }
+            ans = Math.floor((ans *1000)/10);
+            return (int)ans;
+        }
+    }
+    // Solution by team
+
+    public class Solution1 {
+        class Items {
+            double cost;
+            double weight, value, ind;
+            Items(int weight, int value, int ind){
+                this.weight = weight;
+                this.value = value;
+                this.ind = ind;
+                this.cost = new Double((double)value / (double)weight);
+            }
+        }
+        
+        public int solve(int[] A, int[] B, int C) {
+            Items[] iVal = new Items[A.length];
+            for (int i = 0; i < A.length; i++) {
+                iVal[i] = new Items(B[i], A[i], i);
+            }
+            Arrays.sort(iVal, new Comparator<Items>() {
+                @Override
+                public int compare(Items o1, Items o2){
+                    if(o1.cost >= o2.cost){
+                        return -1;
+                    }
+                    return 1;
+                }
+            });
+            double totalValue = 0d;
+            for (Items i : iVal) {
+                int curWt = (int)i.weight;
+                int curVal = (int)i.value;
+                if (C - curWt >= 0) {
+                    C = C - curWt;
+                    totalValue += curVal;
+                }
+                else {
+                    double fraction = ((double)C / (double)curWt);
+                    totalValue += (curVal * fraction);
+                    C = (int)(C - (curWt * fraction));
+                    break;
+                }
+            }
+            totalValue *= 1000;
+            return (int)(totalValue / 10);
+        }
+    }
+
+
+
+
     // 0-1 knapsack
 
     // Given two integer arrays A and B of size N each which represent values and weights associated with N items respectively.
