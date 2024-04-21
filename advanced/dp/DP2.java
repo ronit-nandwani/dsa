@@ -4,6 +4,151 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DP2 {
+    
+    // N digit number
+
+    // Find out the number of A digit positive numbers, whose digits on being added equals to a given number B.
+    // Note that a valid number starts from digits 1-9 except the number 0 itself. i.e. leading zeroes are not allowed.
+    // Since the answer can be large, output answer modulo 1000000007
+    // Problem Constraints
+    // 1 <= A <= 1000
+    // 1 <= B <= 10000
+    // Input Format
+    // First argument is the integer A
+    // Second argument is the integer B
+    // Output Format
+    // Return a single integer, the answer to the problem
+    // Example Input
+    // Input 1:
+    // A = 2
+    // B = 4
+    // Input 2:
+    // A = 1
+    // B = 3
+    // Example Output
+    // Output 1:
+    // 4
+    // Output 2:
+    // 1
+    // Example Explanation
+    // Explanation 1:
+    // Valid numbers are {22, 31, 13, 40}
+    // Hence output 4.
+    // Explanation 2:
+    // Only valid number is 3
+
+    // My implementation pause 2
+    public class Solution {
+        int[][] dp;
+        public int solve(int A, int B) {
+            int ans = 0;
+            dp = new int[A][B];
+            for(int i=0;i<A;i++) {
+                for(int j=0;j<B;j++) {
+                    dp[i][j] = -1;
+                }
+            }
+            for(int i=1;i<10;i++) {
+                ans += rec(A-1, B-i);
+                ans %= 1000000007;
+            }
+    
+            return ans;
+        }
+    
+        public int rec(int id, int sum) {
+            if(sum < 0) {
+                return 0;
+            }
+            if(id == 0 && sum == 0) {
+                return 1;
+            }
+            if(id == 0) {
+                return 0;
+            }
+    
+            if(dp[id][sum]!=-1) {
+                return dp[id][sum];
+            }
+    
+            int ans = 0;
+            for(int i=0;i<10;i++) {
+                ans += rec(id-1, sum-i);
+                ans %= 1000000007;
+            }
+            dp[id][sum]=ans;
+            return dp[id][sum];
+        }
+    }
+    
+    // My implementation
+    int[][] dp = new int[1][1];
+    public int rec(int digit, int sum) {
+        if(digit == 0 && sum == 0) return 1;
+        if(digit == 0) return 0;
+        if(dp[digit][sum] != -1) return dp[digit][sum];
+        int ans = 0;
+        for(int i=0;i<10;i++) {
+            if(sum-i >= 0) {
+                ans += rec(digit-1,sum-i);
+                ans %= 1000000007;
+            }
+        }
+        dp[digit][sum] = ans;
+        return ans;
+    }
+    public int solve(int A, int B) {
+        int ans = 0;
+        dp = new int[A+1][B+1];
+        for(int i=0;i<=A;i++)
+        {
+            for(int j=0;j<=B;j++)
+            {
+                dp[i][j]=-1;
+            }
+        }
+        for(int i=1;i<10;i++) {
+            if(B-i >= 0) {
+                ans += rec(A-1,B-i);
+                ans %= 1000000007;
+            }
+        }
+        return ans;
+    }
+    // Solution by team
+    // public class Solution {
+    //     public int dp[][] = new int[1001][10001];
+    //     int rec(int id, int sum) {
+    //         if (sum < 0)
+    //             return 0;
+    //         if (id == 0 && sum == 0)
+    //             return 1;
+    //         if (id == 0)
+    //             return 0;
+    //         if (dp[id][sum] != -1)
+    //             return dp[id][sum];
+    //         int ans = 0;
+    //         for (int i = 0; i < 10; i++) {
+    //             ans += rec(id - 1, sum - i);
+    //             ans %= 1000000007;
+    //         }
+    //         return dp[id][sum] = ans;
+    //     }
+    //     public int solve(int A, int B) {
+    //         int ans = 0;
+    //         for (int i = 0; i < A + 1; i++) {
+    //             for (int j = 0; j < B + 1; j++)
+    //                 dp[i][j] = -1;
+    //         }
+    //         for (int i = 1; i < 10; i++) {
+    //             ans += rec(A - 1, B - i);
+    //             ans %= 1000000007;
+    //         }
+    //         return ans;
+    //     }
+    // }
+
+
     // Dungeon Princess
     
     // The demons had captured the princess and imprisoned her in the bottom-right corner of a dungeon. The dungeon consists of M x N rooms laid out in a 2D grid. Our valiant knight was initially positioned in the top-left room and must fight his way through the dungeon to rescue the princess.
