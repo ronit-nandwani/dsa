@@ -4,6 +4,84 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FullSyllabusContestMarch2024 {
+    // Pangram Check
+    
+    // Problem Description
+    // Given a sentence represented as an array A of strings that contains all lowercase alphabets.
+    // Chech if it is a pangram or not.
+    // A pangram is a unique sentence in which every letter of the lowercase alphabet is used at least once.
+
+
+    // Problem Constraints
+    // 1 <= |A| <= 105
+    // 1 <= |Ai|<= 5
+
+
+    // Input Format
+    // Given an array of strings A.
+
+
+    // Output Format
+    // Return an integer.
+
+
+    // Example Input
+    // Input 1:
+    // A = ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"]
+    // Input 2:
+
+    // A = ["bit", "scale"]
+
+
+
+    // Example Output
+    // Output 1:
+    // 1
+    // Output 2:
+
+    // 0
+
+
+    // Example Explanation
+    // Explanation 1:
+    // We can check that all english alphabets are present in given sentence.
+    // Explanation 2:
+
+    // Not all english alphabets are present.
+    
+    // Solution by me
+    public int pangramCheck(String[] A) {
+        int n = A.length;
+        int[] arr = new int[26];
+        for(int i = 0;i<n;i++) {
+            for(int j=0;j<A[i].length();j++) {
+                arr[A[i].charAt(j)-'a']++;
+            }
+        }
+        for(int i=0;i<26;i++) {
+            if(arr[i] == 0) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    // Solution by team
+        public int pangramCheckByteam(ArrayList<String> A) {
+            boolean vis[] = new boolean[26];
+            for(String x: A){
+                for(int i = 0; i<x.length(); ++i){
+                    vis[x.charAt(i)-'a'] = true;
+                }
+            }
+            for(int i = 0; i<26; ++i){
+                if(!vis[i]){
+                    return 0;
+                }
+            }
+            return 1;
+        }
+
     
     // Sort by Colour
 
