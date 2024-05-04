@@ -3,20 +3,190 @@ package advanced.trees;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
-class Pair {
+
+class Pairv {
     TreeNode node;
     int distance;
 
-    public Pair(TreeNode node, int distance) {
+    public Pairv(TreeNode node, int distance) {
         this.node = node;
         this.distance = distance;
     }
 }
 public class Trees2 {
+    // Top View of Binary tree
+
+    // Given a binary tree of integers denoted by root A. Return an array of integers representing the top view of the Binary tree.
+
+    // The top view of a Binary Tree is a set of nodes visible when the tree is visited from the top.
+
+    // Return the nodes in any order.
+
+
+
+    // Problem Constraints
+    // 1 <= Number of nodes in binary tree <= 100000
+
+    // 0 <= node values <= 10^9
+
+
+
+    // Input Format
+    // First and only argument is head of the binary tree A.
+
+
+
+    // Output Format
+    // Return an array, representing the top view of the binary tree.
+
+
+
+    // Example Input
+    // Input 1:
+
+    
+    //             1
+    //         /   \
+    //         2    3
+    //         / \  / \
+    //     4   5 6  7
+    //     /
+    //     8 
+    // Input 2:
+
+    
+    //             1
+    //         /  \
+    //         2    3
+    //         \
+    //             4
+    //             \
+    //             5
+
+
+    // Example Output
+    // Output 1:
+
+    // [1, 2, 4, 8, 3, 7]
+    // Output 2:
+
+    // [1, 2, 3]
+
+
+    // Example Explanation
+    // Explanation 1:
+
+    // Top view is described.
+    // Explanation 2:
+
+    // Top view is described.
+
+    // Solution by me
+    public class Pair {
+        TreeNode n;
+        int level;
+        Pair(TreeNode n, int level){
+            this.n = n;
+            this.level = level;
+        }
+    }
+
+    public ArrayList<Integer> solve(TreeNode A) {
+        ArrayList<Integer> res = new ArrayList<>();
+        Queue<Pair> q = new LinkedList<>();
+        SortedMap<Integer, Integer> sm = new TreeMap<>();
+        q.add(new Pair(A, 0));
+        // do a level order traversal while keeping track of the level and its first node in the SortedMap
+        while(!q.isEmpty()){
+            Pair p = q.poll();
+            TreeNode n = p.n;
+            int level = p.level;
+            // handle this node
+            if(!sm.containsKey(level)){
+            sm.put(level, n.val);
+            }
+            // handle its children
+            if(n.left != null) q.add(new Pair(n.left, level -1));
+            if(n.right != null) q.add(new Pair(n.right, level +1));
+        }
+        // traverse the sortedMap to get the top view
+        for(Integer level : sm.keySet()){
+            res.add(sm.get(level));
+        }
+        return res;
+    }
+
+    // Solution by team
+    /**
+     * Definition for binary tree
+     * class TreeNode {
+     *     int val;
+     *     TreeNode left;
+     *     TreeNode right;
+     *     TreeNode(int x) {
+     *      val = x;
+     *      left=null;
+     *      right=null;
+     *     }
+     * }
+     */
+
+    class Pair1 {
+
+        public TreeNode first;
+        public int second;
+
+        public Pair1(TreeNode x, int y) {
+            first = x;
+            second = y;
+        }
+    }
+
+    public class Solution {
+        public ArrayList < Integer > topview(TreeNode root) {
+            ArrayList < Integer > ans = new ArrayList < Integer > ();
+            if (root == null)
+                return ans;
+
+            Queue < Pair1 > level = new LinkedList < Pair1 > ();
+
+            level.add(new Pair1(root, 0));
+            HashMap < Integer, Integer > top = new HashMap < Integer, Integer > ();
+            //Using Level order traversal to find the top view
+            while (level.size() != 0) {
+                Pair1 curr = level.peek();
+                level.remove();
+                if (top.get(curr.second) == null)
+                    top.put(curr.second, curr.first.val);
+
+                if (curr.first.left != null) {
+                    level.add(new Pair1(curr.first.left, curr.second - 1));
+                }
+                if (curr.first.right != null) {
+                    level.add(new Pair1(curr.first.right, curr.second + 1));
+                }
+            }
+
+            for (Map.Entry elem: top.entrySet()) {
+                ans.add((int) elem.getValue());
+            }
+            return ans;
+        }
+        public ArrayList < Integer > solve(TreeNode A) {
+            return topview(A);
+        }
+    }
+
+
+
+
     // Vertical Order Traversal
     //     Given a binary tree, return a 2-D array with vertical order traversal of it. Go through the example and image for more details.
     // NOTE: If 2 Tree Nodes shares the same vertical level then the one with lesser depth will come first.
@@ -61,13 +231,13 @@ public class Trees2 {
     // First row represent the verical line 1 and so on.
     public ArrayList<ArrayList<Integer>> verticalOrderTraversal(TreeNode root) {
         TreeMap<Integer,ArrayList<TreeNode>> tm = new TreeMap<Integer,ArrayList<TreeNode>>();
-        Deque<Pair> q = new ArrayDeque<>();
+        Deque<Pairv> q = new ArrayDeque<>();
         ArrayList<ArrayList<Integer>> ans = new ArrayList<ArrayList<Integer>>();
         if(root == null) return ans;
 
-        q.add(new Pair(root, 0));
+        q.add(new Pairv(root, 0));
         while(q.size() != 0) {
-            Pair x = q.removeFirst();
+            Pairv x = q.removeFirst();
             if(tm.containsKey(x.distance)) {
                 ArrayList<TreeNode> list = tm.get(x.distance);
                 list.add(x.node);
@@ -78,10 +248,10 @@ public class Trees2 {
                 tm.put(x.distance, list);
             }
             if(x.node.left != null) {
-                q.addLast(new Pair(x.node.left,x.distance-1));
+                q.addLast(new Pairv(x.node.left,x.distance-1));
             }
             if(x.node.right != null) {
-                q.addLast(new Pair(x.node.right,x.distance+1));
+                q.addLast(new Pairv(x.node.right,x.distance+1));
             }
         }
 
