@@ -24,6 +24,156 @@ import java.util.Set;
 
 public class ArraysLeetCode {
 
+    // 2028. Find Missing Observations
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // You have observations of n + m 6-sided dice rolls with each face numbered from 1 to 6. n of the observations went missing, and you only have the observations of m rolls. Fortunately, you have also calculated the average value of the n + m rolls.
+
+    // You are given an integer array rolls of length m where rolls[i] is the value of the ith observation. You are also given the two integers mean and n.
+
+    // Return an array of length n containing the missing observations such that the average value of the n + m rolls is exactly mean. If there are multiple valid answers, return any of them. If no such array exists, return an empty array.
+
+    // The average value of a set of k numbers is the sum of the numbers divided by k.
+
+    // Note that mean is an integer, so the sum of the n + m rolls should be divisible by n + m.
+
+    
+
+    // Example 1:
+
+    // Input: rolls = [3,2,4,3], mean = 4, n = 2
+    // Output: [6,6]
+    // Explanation: The mean of all n + m rolls is (3 + 2 + 4 + 3 + 6 + 6) / 6 = 4.
+    // Example 2:
+
+    // Input: rolls = [1,5,6], mean = 3, n = 4
+    // Output: [2,3,2,2]
+    // Explanation: The mean of all n + m rolls is (1 + 5 + 6 + 2 + 3 + 2 + 2) / 7 = 3.
+    // Example 3:
+
+    // Input: rolls = [1,2,3,4], mean = 6, n = 4
+    // Output: []
+    // Explanation: It is impossible for the mean to be 6 no matter what the 4 missing rolls are.
+    
+
+    // Constraints:
+
+    // m == rolls.length
+    // 1 <= n, m <= 105
+    // 1 <= rolls[i], mean <= 6
+
+
+    // Solution by me - 5 ms;
+    public int[] missingRolls(int[] rolls, int mean, int n) {
+        int m = rolls.length;
+        int sum = 0;
+
+        for(int i=0;i<m;i++) {
+            sum += rolls[i];
+        }
+
+        int sumOfRemainingElements = (n+m)*mean - sum;
+        //System.out.println(sumOfRemainingElements);
+        //System.out.println((sumOfRemainingElements - (n*6)));
+
+        if(sumOfRemainingElements < 0  || sumOfRemainingElements < n || (sumOfRemainingElements - (n*6)) > 0) {
+            return new int[]{};
+        }
+        int[] arr = new int[n];
+        int tempSum = 0;
+        // 9, 4 4-1*(9/4) = 6, 9-6 3
+        int lastElement = sumOfRemainingElements - (n-1)*(sumOfRemainingElements/n);
+        int sumToAdjust = 0;
+        if((lastElement-6) > 0) {
+            sumToAdjust = lastElement-6;
+        }
+        for(int i=0;i<n;i++) {
+            if(i!=(n-1)) {
+                arr[i] = sumOfRemainingElements/n;
+                tempSum += arr[i];
+                if(sumToAdjust > 0 && arr[i]<6) {
+                    arr[i]++;
+                    tempSum++;
+                    sumToAdjust--;
+                }
+            } else {
+                arr[i] = sumOfRemainingElements - tempSum;
+            }
+        }
+
+        // 9, 4 4-1*(9/4) = 6, 9-6 3
+        // i=0 2 2
+        // i=1 2 4
+        // i=2 2 6
+        // i=3 3
+
+        return arr;
+    }
+
+
+    // Solution by chatGpt - 4 ms
+    public int[] missingRollsGPT(int[] rolls, int mean, int n) {
+        int m = rolls.length;
+        // Calculate the total sum for n + m rolls
+        int totalSum = (n + m) * mean;
+        
+        // Calculate the sum of the given rolls
+        int currentSum = 0;
+        for (int roll : rolls) {
+            currentSum += roll;
+        }
+        
+        // The missing sum we need to achieve with the n missing rolls
+        int missingSum = totalSum - currentSum;
+        
+        // Each missing roll must be between 1 and 6, so the total missing sum must be within range
+        if (missingSum < n || missingSum > 6 * n) {
+            return new int[0];  // No valid solution
+        }
+        
+        // Distribute the missing sum over the n missing rolls
+        int[] result = new int[n];
+        Arrays.fill(result, 1);  // Start by assigning 1 to each missing roll
+        missingSum -= n;  // Subtract the sum we have already assigned (n * 1)
+        
+        // Now distribute the remaining sum (missingSum) over the result array
+        for (int i = 0; i < n && missingSum > 0; i++) {
+            // We can add up to 5 to each roll (since each is already 1, and max is 6)
+            int add = Math.min(5, missingSum);
+            result[i] += add;
+            missingSum -= add;
+        }
+        
+        return result;
+    }
+
+    // Fastest Solution -2 ms
+    public int[] missingRollsFastest(int[] rolls, int mean, int n) {
+        int[] ret = new int[n];
+        int sum = 0;
+        for (int i : rolls) {
+            sum += i;
+        }
+        int missingSum = mean * (n + rolls.length) - sum;
+        if (missingSum > 6*n || missingSum < n) {
+            return new int[]{};
+        }
+        int expectedAvg = missingSum/n, remainder = missingSum%n;
+
+        for (int i = 0; i < remainder; i++) {
+            ret[i] = expectedAvg + 1;
+        }
+        for (int i = remainder; i < n;i++) {
+            ret[i] = expectedAvg;
+        }
+        return ret;
+    }
+
+    // --------------------------------------------------
+
     // 2022. Convert 1D Array Into 2D Array
     // Solved
     // Easy
