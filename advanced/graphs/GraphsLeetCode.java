@@ -3,10 +3,136 @@ package advanced.graphs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 public class GraphsLeetCode {
+    // 947. Most Stones Removed with Same Row or Column
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // On a 2D plane, we place n stones at some integer coordinate points. Each coordinate point may have at most one stone.
+
+    // A stone can be removed if it shares either the same row or the same column as another stone that has not been removed.
+
+    // Given an array stones of length n where stones[i] = [xi, yi] represents the location of the ith stone, return the largest possible number of stones that can be removed.
+
+    
+
+    // Example 1:
+
+    // Input: stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]
+    // Output: 5
+    // Explanation: One way to remove 5 stones is as follows:
+    // 1. Remove stone [2,2] because it shares the same row as [2,1].
+    // 2. Remove stone [2,1] because it shares the same column as [0,1].
+    // 3. Remove stone [1,2] because it shares the same row as [1,0].
+    // 4. Remove stone [1,0] because it shares the same column as [0,0].
+    // 5. Remove stone [0,1] because it shares the same row as [0,0].
+    // Stone [0,0] cannot be removed since it does not share a row/column with another stone still on the plane.
+    // Example 2:
+
+    // Input: stones = [[0,0],[0,2],[1,1],[2,0],[2,2]]
+    // Output: 3
+    // Explanation: One way to make 3 moves is as follows:
+    // 1. Remove stone [2,2] because it shares the same row as [2,0].
+    // 2. Remove stone [2,0] because it shares the same column as [0,0].
+    // 3. Remove stone [0,2] because it shares the same row as [0,0].
+    // Stones [0,0] and [1,1] cannot be removed since they do not share a row/column with another stone still on the plane.
+    // Example 3:
+
+    // Input: stones = [[0,0]]
+    // Output: 0
+    // Explanation: [0,0] is the only stone on the plane, so you cannot remove it.
+    
+
+    // Constraints:
+
+    // 1 <= stones.length <= 1000
+    // 0 <= xi, yi <= 104
+    // No two stones are at the same coordinate point.
+
+
+    // Solution by me - 15 ms
+    private Map<Integer, Integer> parent = new HashMap<>();
+
+    public int removeStones(int[][] stones) {
+        int n = stones.length;
+
+        // Union stones based on their row and column
+        for (int[] stone : stones) {
+            int x = stone[0];
+            int y = ~stone[1]; // use bitwise NOT to differentiate columns from rows
+            union(x, y);
+        }
+
+        // Count unique roots (connected components)
+        int numOfComponents = 0;
+        for (int key : parent.keySet()) {
+            if (find(key) == key) {
+                numOfComponents++;
+            }
+        }
+
+        // The answer is the total number of stones minus the number of connected components
+        return n - numOfComponents;
+    }
+
+    // Find with path compression
+    private int find(int x) {
+        if (parent.putIfAbsent(x, x) == null) {
+            return x;
+        }
+        if (parent.get(x) != x) {
+            parent.put(x, find(parent.get(x)));
+        }
+        return parent.get(x);
+    }
+
+    // Union by assigning one root to another
+    private void union(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+        if (rootX != rootY) {
+            parent.put(rootX, rootY);
+        }
+    }
+
+    // Fastest Solution - 3 ms
+    private int connectedComponentCount = 0;
+
+    public int removeStonesFastest(int[][] stonePositions) {
+        int[] setRepresentatives = new int[20003];
+        for (int[] stonePosition : stonePositions) {
+            mergeComponents(stonePosition[0] + 1, stonePosition[1] + 10002, setRepresentatives);
+        }
+        return stonePositions.length - connectedComponentCount;
+    }
+
+    private int findRepresentative(int element, int[] setRepresentatives) {
+        if (setRepresentatives[element] == 0) {
+            setRepresentatives[element] = element;
+            connectedComponentCount++;
+        }
+        return setRepresentatives[element] == element ? element : 
+               (setRepresentatives[element] = findRepresentative(setRepresentatives[element], setRepresentatives));
+    }
+
+    private void mergeComponents(int elementA, int elementB, int[] setRepresentatives) {
+        int repA = findRepresentative(elementA, setRepresentatives);
+        int repB = findRepresentative(elementB, setRepresentatives);
+        if (repA != repB) {
+            setRepresentatives[repB] = repA;
+            connectedComponentCount--;
+        }
+    }
+
+    // --------------------------------------------------------------
+
+
     // 2699. Modify Graph Edge Weights
     // Solved
     // Hard
