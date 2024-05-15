@@ -9,6 +9,218 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class GraphsLeetCode {
+    // 1905. Count Sub Islands
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // You are given two m x n binary matrices grid1 and grid2 containing only 0's (representing water) and 1's (representing land). An island is a group of 1's connected 4-directionally (horizontal or vertical). Any cells outside of the grid are considered water cells.
+
+    // An island in grid2 is considered a sub-island if there is an island in grid1 that contains all the cells that make up this island in grid2.
+
+    // Return the number of islands in grid2 that are considered sub-islands.
+
+    
+
+    // Example 1:
+
+
+    // Input: grid1 = [[1,1,1,0,0],[0,1,1,1,1],[0,0,0,0,0],[1,0,0,0,0],[1,1,0,1,1]], grid2 = [[1,1,1,0,0],[0,0,1,1,1],[0,1,0,0,0],[1,0,1,1,0],[0,1,0,1,0]]
+    // Output: 3
+    // Explanation: In the picture above, the grid on the left is grid1 and the grid on the right is grid2.
+    // The 1s colored red in grid2 are those considered to be part of a sub-island. There are three sub-islands.
+    // Example 2:
+
+
+    // Input: grid1 = [[1,0,1,0,1],[1,1,1,1,1],[0,0,0,0,0],[1,1,1,1,1],[1,0,1,0,1]], grid2 = [[0,0,0,0,0],[1,1,1,1,1],[0,1,0,1,0],[0,1,0,1,0],[1,0,0,0,1]]
+    // Output: 2 
+    // Explanation: In the picture above, the grid on the left is grid1 and the grid on the right is grid2.
+    // The 1s colored red in grid2 are those considered to be part of a sub-island. There are two sub-islands.
+    
+
+    // Constraints:
+
+    // m == grid1.length == grid2.length
+    // n == grid1[i].length == grid2[i].length
+    // 1 <= m, n <= 500
+    // grid1[i][j] and grid2[i][j] are either 0 or 1.
+
+
+    // Solution by me - 20 ms
+
+    public int countSubIslands(int[][] grid1, int[][] grid2) {
+        int m = grid1.length;
+        int n = grid1[0].length;
+        int count = 0;
+        
+        // Traverse through grid2 to find all islands
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // If we find an island in grid2
+                if (grid2[i][j] == 1) {
+                    // Check if this island is a sub-island in grid1
+                    if (isSubIsland(grid1, grid2, i, j)) {
+                        count++;
+                    }
+                }
+            }
+        }
+        
+        return count;
+    }
+    
+    // DFS function to check if an island in grid2 is a sub-island in grid1
+    private boolean isSubIsland(int[][] grid1, int[][] grid2, int i, int j) {
+        int m = grid1.length;
+        int n = grid1[0].length;
+        
+        // If out of bounds or water in grid2, stop DFS
+        if (i < 0 || i >= m || j < 0 || j >= n || grid2[i][j] == 0) {
+            return true;
+        }
+        
+        // If this part of grid2 island is not land in grid1, it's not a sub-island
+        if (grid1[i][j] == 0) {
+            return false;
+        }
+        
+        // Mark this cell as visited in grid2
+        grid2[i][j] = 0;
+        
+        // Initialize isSubIsland to true; any false in neighbors will change it
+        boolean isSubIsland = true;
+        
+        // DFS in 4 directions
+        isSubIsland &= isSubIsland(grid1, grid2, i - 1, j);
+        isSubIsland &= isSubIsland(grid1, grid2, i + 1, j);
+        isSubIsland &= isSubIsland(grid1, grid2, i, j - 1);
+        isSubIsland &= isSubIsland(grid1, grid2, i, j + 1);
+        
+        return isSubIsland;
+    }
+
+    // Fastest Solution - 12 ms
+    public static int countSubIslandsFastest(int[][] grid1, int[][] grid2) {
+        int m = grid1.length;
+        int n = grid1[0].length;
+        int size = m * n;
+
+        // Initializes union-find structures.
+        int[] parents = new int[size];
+        for (int x = 1; x < size; x++) {
+            parents[x] = x;
+        }
+        int[] ranks = new int[size];
+        int[] areSubislandRoots = new int[size];
+
+        // Process the corner cell.
+        int[] firstGridRow1 = grid1[0];
+        int[] firstGridRow2 = grid2[0];
+        int cornerCell2 = firstGridRow2[0];
+        areSubislandRoots[0] = cornerCell2 & firstGridRow1[0];
+
+        // Process the remaining cells in the first row.
+        int x = 1;
+        int prevCell2 = cornerCell2;
+        for (int col = 1; col < n; col++) {
+            int cell2 = firstGridRow2[col];
+            if (cell2 != 0) {
+                areSubislandRoots[x] = firstGridRow1[col];
+                if (prevCell2 != 0) {
+                    union(x, x - 1, parents, ranks, areSubislandRoots);
+                }
+            }
+            prevCell2 = cell2;
+            x++;
+        }
+
+        // Process the remaining cells in the first column.
+        x = n;
+        prevCell2 = cornerCell2;
+        for (int row = 1; row < m; row++) {
+            int cell2 = grid2[row][0];
+            if (cell2 != 0) {
+                areSubislandRoots[x] = grid1[row][0];
+                if (prevCell2 != 0) {
+                    union(x, x - n, parents, ranks, areSubislandRoots);
+                }
+            }
+            prevCell2 = cell2;
+            x += n;
+        }
+
+        // Process the remaining cells.
+        x = n + 1;
+        int[] prevGridRow2 = firstGridRow2;
+        for (int row = 1; row < m; row++) {
+            int[] gridRow1 = grid1[row];
+            int[] gridRow2 = grid2[row];
+            prevCell2 = gridRow2[0];
+            for (int col = 1; col < n; col++) {
+                int cell = gridRow2[col];
+                if (cell != 0) {
+                    areSubislandRoots[x] = gridRow1[col];
+                    if (prevCell2 != 0) {
+                        union(x, x - 1, parents, ranks, areSubislandRoots);
+                    }
+                    if (prevGridRow2[col] != 0) {
+                        union(x, x - n, parents, ranks, areSubislandRoots);
+                    }
+                }
+                prevCell2 = cell;
+                x++;
+            }
+            prevGridRow2 = gridRow2;
+            x++;
+        }
+
+        // Count the subislands.
+        int numSubislands = 0;
+        for (int isSubislandRoot : areSubislandRoots) {
+            numSubislands += isSubislandRoot;
+        }
+        return numSubislands;
+    }
+
+    private static void union(int x, int y, int[] parents, int[] ranks, int[] areSubislandRoots) {
+        // Find the roots of x and y.
+        int xParent = parents[x];
+        while (x != xParent) {
+            x = xParent;
+            xParent = parents[x];
+        }
+        int yParent = parents[y];
+        while (y != yParent) {
+            y = yParent;
+            yParent = parents[y];
+        }
+
+        // Stop if the roots are already the same.
+        if (x == y) {
+            return;
+        }
+
+        // Merge the two roots.
+        int rankCmp = ranks[y] - ranks[x];
+        int isSubislandRoot = areSubislandRoots[x] & areSubislandRoots[y];
+        if (rankCmp > 0) {
+            parents[x] = y;
+            areSubislandRoots[x] = 0;
+            areSubislandRoots[y] = isSubislandRoot;
+        } else {
+            parents[y] = x;
+            areSubislandRoots[y] = 0;
+            areSubislandRoots[x] = isSubislandRoot;
+            ranks[x] += ~rankCmp >>> 31; // 1 if rankCmp == 0, 0 if rankCmp < 0
+        }
+    }
+
+
+
+    // -----------------------------------------------------------------------
+
+
     // 947. Most Stones Removed with Same Row or Column
     // Solved
     // Medium
