@@ -2,6 +2,8 @@ package advanced.trees;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 class TreeNode {
     int val;
     TreeNode left;
@@ -15,6 +17,103 @@ class TreeNode {
     }
 }
 public class TreesLeetcode {
+    // 590. N-ary Tree Postorder Traversal
+    // Solved
+    // Easy
+    // Topics
+    // Companies
+    // Given the root of an n-ary tree, return the postorder traversal of its nodes' values.
+
+    // Nary-Tree input serialization is represented in their level order traversal. Each group of children is separated by the null value (See examples)
+
+    
+
+    // Example 1:
+
+
+    // Input: root = [1,null,3,2,4,null,5,6]
+    // Output: [5,6,3,2,4,1]
+    // Example 2:
+
+
+    // Input: root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]
+    // Output: [2,6,14,11,7,3,12,8,4,13,9,10,5,1]
+    
+
+    // Constraints:
+
+    // The number of nodes in the tree is in the range [0, 104].
+    // 0 <= Node.val <= 104
+    // The height of the n-ary tree is less than or equal to 1000.
+    
+
+    // Follow up: Recursive solution is trivial, could you do it iteratively?
+
+    // Definition for a Node.
+    class Node {
+        public int val;
+        public List<Node> children;
+
+        public Node() {}
+
+        public Node(int _val) {
+            val = _val;
+        }
+
+        public Node(int _val, List<Node> _children) {
+            val = _val;
+            children = _children;
+        }
+    };
+
+    // Solution by me - 0 ms
+    public List<Integer> postorder(Node root) {
+        // Recursize - fast
+        List<Integer> result = new ArrayList<>();
+        postorderTraversal(root, result);
+        return result;
+        
+        
+       // // Iterative - slow
+        //LinkedList<Integer> result = new LinkedList<>();
+        //if (root == null) {
+        //    return result;
+        //}
+
+        //Stack<Node> stack = new Stack<>();
+        //stack.push(root);
+
+       // while (!stack.isEmpty()) {
+         //   Node node = stack.pop();
+           // // Instead of adding at the end, we add at the beginning
+            //result.addFirst(node.val);
+            
+            //// Add all children to the stack
+            //for (Node child : node.children) {
+                //stack.push(child);
+            //}
+        //}
+
+        //return result;
+    }
+    private void postorderTraversal(Node node, List<Integer> result) {
+        if (node == null) {
+            return;
+        }
+        
+        // Recurse on each child
+        for (Node child : node.children) {
+            postorderTraversal(child, result);
+        }
+        
+        // Add the node's value after visiting all children
+        result.add(node.val);
+    }
+
+
+    // --------------------------------------------
+
+
     // 1382. Balance a Binary Search Tree
     // Given the root of a binary search tree, return a balanced binary search tree with the same node values. If there is more than one answer, return any of them.
 
