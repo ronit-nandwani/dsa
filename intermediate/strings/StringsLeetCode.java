@@ -1,6 +1,132 @@
 package intermediate.strings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StringsLeetCode {
+    // 564. Find the Closest Palindrome
+    // Solved
+    // Hard
+    // Topics
+    // Companies
+    // Hint
+    // Given a string n representing an integer, return the closest integer (not including itself), which is a palindrome. If there is a tie, return the smaller one.
+
+    // The closest is defined as the absolute difference minimized between two integers.
+
+    
+
+    // Example 1:
+
+    // Input: n = "123"
+    // Output: "121"
+    // Example 2:
+
+    // Input: n = "1"
+    // Output: "0"
+    // Explanation: 0 and 2 are the closest palindromes but we return the smallest which is 0.
+    
+
+    // Constraints:
+
+    // 1 <= n.length <= 18
+    // n consists of only digits.
+    // n does not have leading zeros.
+    // n is representing an integer in the range [1, 1018 - 1].
+
+    // Solution by me - 1 ms
+    public String nearestPalindromic(String numberStr) {
+        long number = Long.parseLong(numberStr);
+        if (number <= 10) return String.valueOf(number - 1);
+        if (number == 11) return "9";
+
+        int length = numberStr.length();
+        long leftHalf = Long.parseLong(numberStr.substring(0, (length + 1) / 2));
+        
+        long[] palindromeCandidates = new long[5];
+        palindromeCandidates[0] = generatePalindromeFromLeft(leftHalf - 1, length % 2 == 0);
+        palindromeCandidates[1] = generatePalindromeFromLeft(leftHalf, length % 2 == 0);
+        palindromeCandidates[2] = generatePalindromeFromLeft(leftHalf + 1, length % 2 == 0);
+        palindromeCandidates[3] = (long)Math.pow(10, length - 1) - 1;
+        palindromeCandidates[4] = (long)Math.pow(10, length) + 1;
+
+        long nearestPalindrome = 0;
+        long minDifference = Long.MAX_VALUE;
+
+        for (long candidate : palindromeCandidates) {
+            if (candidate == number) continue;
+            long difference = Math.abs(candidate - number);
+            if (difference < minDifference || (difference == minDifference && candidate < nearestPalindrome)) {
+                minDifference = difference;
+                nearestPalindrome = candidate;
+            }
+        }
+
+        return String.valueOf(nearestPalindrome);
+    }
+
+    private long generatePalindromeFromLeft(long leftHalf, boolean isEvenLength) {
+        long palindrome = leftHalf;
+        if (!isEvenLength) leftHalf /= 10;
+        while (leftHalf > 0) {
+            palindrome = palindrome * 10 + leftHalf % 10;
+            leftHalf /= 10;
+        }
+        return palindrome;
+    }
+
+    // Other Solution - 2 ms
+
+    public String nearestPalindromicSlow(String n) {
+          int len = n.length();
+        int i = len%2 == 0 ? len/2-1 : len/2;
+
+        long firstHalf = Long.parseLong(n.substring(0,i+1));
+
+        /* All possibilties */
+
+        List<Long> possibilties = new ArrayList<>();
+
+        possibilties.add(halfToPalindome(firstHalf,len%2==0));
+        possibilties.add(halfToPalindome(firstHalf+1,len%2==0));
+        possibilties.add(halfToPalindome(firstHalf-1,len%2==0));
+        possibilties.add((long) Math.pow(10,len-1)-1);
+        possibilties.add((long) Math.pow(10,len)+1);
+
+        long n1 = Long.parseLong(n);
+        long diff = Long.MAX_VALUE;
+        long res=0;
+        for(long poss : possibilties) {
+            if(poss==n1) continue;
+
+            if(Math.abs(poss-n1) < diff) {
+               diff = Math.abs(poss-n1);
+               res = poss;
+            }
+            else if(Math.abs(poss-n1)==diff) {
+                res = Math.min(res,poss);
+            }
+        }
+        return String.valueOf(res);
+    }
+
+    private long halfToPalindome(long left, boolean even) {
+       
+       long res = left;
+       //for odd length middle number need not to be replicated
+       if(!even) left = left/10;
+
+       while(left > 0) {
+           res = res*10 + (left%10);
+           left = left/10;
+       }
+
+       return res;
+    }
+    
+
+    // --------------------------------------------------------------------
+
     // 1945. Sum of Digits of String After Convert
     // Solved
     // Easy
