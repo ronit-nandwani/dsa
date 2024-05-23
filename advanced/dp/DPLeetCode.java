@@ -3,6 +3,141 @@ package advanced.dp;
 import java.util.Arrays;
 
 public class DPLeetCode {
+    // 264. Ugly Number II
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
+
+    // Given an integer n, return the nth ugly number.
+
+    
+
+    // Example 1:
+
+    // Input: n = 10
+    // Output: 12
+    // Explanation: [1, 2, 3, 4, 5, 6, 8, 9, 10, 12] is the sequence of the first 10 ugly numbers.
+    // Example 2:
+
+    // Input: n = 1
+    // Output: 1
+    // Explanation: 1 has no prime factors, therefore all of its prime factors are limited to 2, 3, and 5.
+    
+
+    // Constraints:
+
+    // 1 <= n <= 1690
+
+    // Solution by me - 2 ms
+    public int nthUglyNumber(int n) {
+        int[] uglyNumbers = new int[n];
+        uglyNumbers[0] = 1;
+        int i2 = 0, i3 = 0, i5 = 0;
+        
+        for (int i = 1; i < n; i++) {
+            int nextUgly = Math.min(uglyNumbers[i2] * 2, 
+                           Math.min(uglyNumbers[i3] * 3, 
+                                    uglyNumbers[i5] * 5));
+            
+            uglyNumbers[i] = nextUgly;
+            
+            if (nextUgly == uglyNumbers[i2] * 2) i2++;
+            if (nextUgly == uglyNumbers[i3] * 3) i3++;
+            if (nextUgly == uglyNumbers[i5] * 5) i5++;
+        }
+        
+        return uglyNumbers[n - 1];
+    }
+
+    // Faster Solution - 0 ms
+    
+    // private static int[] UGLY_NUMBERS = new int[1691];
+    // static {
+    //     int number = 1;
+    //     int n2 = 1;
+    //     int n3 = 1;
+    //     int n5 = 1;
+    //     for (int n = 1; n < 1691; n++) {
+    //         UGLY_NUMBERS[n] = number;
+    //         int min2 = UGLY_NUMBERS[n2] * 2;
+    //         int min3 = UGLY_NUMBERS[n3] * 3;
+    //         int min5 = UGLY_NUMBERS[n5] * 5;
+    //         int min = min2 < min3 ? min2 : min3;
+    //         if (min5 < min) {
+    //             min = min5;
+    //         }
+    //         if (min == min2) {
+    //             n2++;
+    //         }
+    //         if (min == min3) {
+    //             n3++;
+    //         }
+    //         if (min == min5) {
+    //             n5++;
+    //         }
+    //         number = min;
+    //     }
+    // }
+    private static Ugly ugly = new Ugly();
+
+    public int nthUglyNumberFaster(int n) {
+        return ugly.number(n);
+        // return UGLY_NUMBERS[n];
+    }
+
+    // 1
+    // 2, min(1*2, 1*3, 1*5)
+    // 3, min(2*2, 1*3, 1*5)
+    // 4, min(3*2, 2*3, 1*5)
+    // 5, min(3*2, 2*3, 1*5)
+    // 6, min(3*2, 2*3, 2*5)
+    // 8, min(5*2, 3*3, 2*5)
+    // 9, min(5*2, 3*3, 2*5)
+    // 10, min(5*2, 4*3, 2*5)
+    // 12, min(6*2, 4*3, 3*5)
+    // 14, min(7*2, 4*3, 3*5)
+    // 
+
+
+}
+
+class Ugly {
+    private int[] numbers = new int[1691];
+    public Ugly() {
+        numbers[1] = 1;
+        int n2 = 1;
+        int n3 = 1;
+        int n5 = 1;
+        for (int n = 2; n < 1691; n++) {
+            int min2 = numbers[n2] * 2;
+            int min3 = numbers[n3] * 3;
+            int min5 = numbers[n5] * 5;
+            int min = min2 < min3 ? min2 : min3;
+            if (min5 < min) {
+                min = min5;
+            }
+            if (min == min2) {
+                n2++;
+            }
+            if (min == min3) {
+                n3++;
+            }
+            if (min == min5) {
+                n5++;
+            }
+            numbers[n] = min;
+        }
+    }
+    public int number(int n) {
+        return numbers[n];
+    }
+
+
+    // --------------------------------------------------------------
+
     // 650. 2 Keys Keyboard
     // Solved
     // Medium
