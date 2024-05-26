@@ -22,7 +22,222 @@ import java.util.Set;
          }
      }
 
+
+class ListNode {
+     int val;
+     ListNode next;
+     ListNode() {}
+     ListNode(int val) { this.val = val; }
+     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ }
+
 public class ArraysLeetCode {
+
+    // 2326. Spiral Matrix IV
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // You are given two integers m and n, which represent the dimensions of a matrix.
+
+    // You are also given the head of a linked list of integers.
+
+    // Generate an m x n matrix that contains the integers in the linked list presented in spiral order (clockwise), starting from the top-left of the matrix. If there are remaining empty spaces, fill them with -1.
+
+    // Return the generated matrix.
+
+
+    // Example 1:
+
+
+    // Input: m = 3, n = 5, head = [3,0,2,6,8,1,7,9,4,2,5,5,0]
+    // Output: [[3,0,2,6,8],[5,0,-1,-1,1],[5,2,4,9,7]]
+    // Explanation: The diagram above shows how the values are printed in the matrix.
+    // Note that the remaining spaces in the matrix are filled with -1.
+    // Example 2:
+
+
+    // Input: m = 1, n = 4, head = [0,1,2]
+    // Output: [[0,1,2,-1]]
+    // Explanation: The diagram above shows how the values are printed from left to right in the matrix.
+    // The last space in the matrix is set to -1.
+    
+
+    // Constraints:
+
+    // 1 <= m, n <= 105
+    // 1 <= m * n <= 105
+    // The number of nodes in the list is in the range [1, m * n].
+    // 0 <= Node.val <= 1000
+
+
+    // Solution by me - 20 ms
+
+    public int[][] spiralMatrix(int m, int n, ListNode head) {
+        int[][] dir = new int[][]{{0,0},{}};
+        int iterationCount = 0;
+        int row = 0, col = 0;
+        ListNode temp = head;
+        int[][] matrix = new int[m][n];
+        
+        while(m>1 && n>1) {
+            int i=row,j=col;
+            System.out.println(i + " " + j);
+            for(int k=0;k<n-1;k++) {
+                if(temp != null) {
+                    matrix[i][j] = temp.val;
+                    temp = temp.next;
+                } else {
+                    matrix[i][j] = -1;
+                }
+                j++;
+            }
+            for(int k=0;k<m-1;k++) {
+                if(temp != null) {
+                    matrix[i][j] = temp.val;
+                    temp = temp.next;
+                } else {
+                    matrix[i][j] = -1;
+                }
+                i++;
+            }
+            for(int k=0;k<n-1;k++) {
+                if(temp != null) {
+                    matrix[i][j] = temp.val;
+                    temp = temp.next;
+                } else {
+                    matrix[i][j] = -1;
+                }
+                j--;
+            }
+            for(int k=0;k<m-1;k++) {
+                if(temp != null) {
+                    matrix[i][j] = temp.val;
+                    temp = temp.next;
+                } else {
+                    matrix[i][j] = -1;
+                }
+                i--;
+            }
+            row++;col++;n=n-2;m=m-2;
+        }
+
+        System.out.println("row: " + row + " col: " + col);
+        System.out.println("m " + m + " " + row);
+
+        // Case 1: Remaining row(s)
+    if (m == 1) {
+        for (int j = col; j < col + n; j++) {
+            matrix[row][j] = temp != null ? temp.val : -1;
+            temp = temp != null ? temp.next : null;
+        }
+    } else if (n == 1) {
+        for (int i = row; i < row + m; i++) {
+            matrix[i][col] = temp != null ? temp.val : -1;
+            temp = temp != null ? temp.next : null;
+        }
+    }
+        return matrix;
+    }
+
+
+
+
+    // Faster Solution by ChatGPT - 7 ms
+
+    public int[][] spiralMatrixFaster(int m, int n, ListNode head) {
+        // Step 1: Create a matrix of m x n and fill it with -1
+        int[][] matrix = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = -1;
+            }
+        }
+        
+        // Step 2: Define the boundaries for spiral traversal
+        int top = 0, bottom = m - 1, left = 0, right = n - 1;
+        
+        ListNode current = head;
+        
+        // Step 3: Start filling the matrix in spiral order
+        while (top <= bottom && left <= right && current != null) {
+            // Move right
+            for (int i = left; i <= right && current != null; i++) {
+                matrix[top][i] = current.val;
+                current = current.next;
+            }
+            top++;
+            
+            // Move down
+            for (int i = top; i <= bottom && current != null; i++) {
+                matrix[i][right] = current.val;
+                current = current.next;
+            }
+            right--;
+            
+            // Move left
+            for (int i = right; i >= left && current != null; i--) {
+                matrix[bottom][i] = current.val;
+                current = current.next;
+            }
+            bottom--;
+            
+            // Move up
+            for (int i = bottom; i >= top && current != null; i--) {
+                matrix[i][left] = current.val;
+                current = current.next;
+            }
+            left++;
+        }
+        
+        return matrix;
+    }
+
+
+    // Fastest Solution - 4 ms
+        public int[][] spiralMatrixFastest(int rows, int columns, ListNode head) {
+            int[][] matrix = new int[rows][];
+            for (int i = 0; i < rows; i++) {
+                matrix[i] = new int [columns];
+                Arrays.fill(matrix[i], -1);
+            }
+    
+            int topRow = 0, bottomRow = rows - 1, leftColumn = 0, rightColumn = columns - 1;
+            while (head != null) {
+            
+                for (int col = leftColumn; col <= rightColumn && head != null; col++) {
+                    matrix[topRow][col] = head.val;
+                    head = head.next;
+                }
+                topRow++;
+    
+            
+                for (int row = topRow; row <= bottomRow && head != null; row++) {
+                    matrix[row][rightColumn] = head.val;
+                    head = head.next;
+                }
+                rightColumn--;
+    
+     
+                for (int col = rightColumn; col >= leftColumn && head != null; col--) {
+                    matrix[bottomRow][col] = head.val;
+                    head = head.next;
+                }
+                bottomRow--;
+    
+           
+                for (int row = bottomRow; row >= topRow && head != null; row--) {
+                    matrix[row][leftColumn] = head.val;
+                    head = head.next;
+                }
+                leftColumn++;
+            }
+    
+            return matrix;
+        }
+
+
+    // ----------------------------------------------------------------------------
 
     // 2028. Find Missing Observations
     // Solved
