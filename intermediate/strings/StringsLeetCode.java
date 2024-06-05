@@ -2,8 +2,106 @@ package intermediate.strings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
+
+import advanced.trees.Trees2.Pair;
 
 public class StringsLeetCode {
+    //     1190. Reverse Substrings Between Each Pair of Parentheses
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // You are given a string s that consists of lower case English letters and brackets.
+
+    // Reverse the strings in each pair of matching parentheses, starting from the innermost one.
+
+    // Your result should not contain any brackets.
+
+    // Example 1:
+
+    // Input: s = "(abcd)"
+    // Output: "dcba"
+    // Example 2:
+
+    // Input: s = "(u(love)i)"
+    // Output: "iloveu"
+    // Explanation: The substring "love" is reversed first, then the whole string is reversed.
+    // Example 3:
+
+    // Input: s = "(ed(et(oc))el)"
+    // Output: "leetcode"
+    // Explanation: First, we reverse the substring "oc", then "etco", and finally, the whole string.
+    
+
+    // Constraints:
+
+    // 1 <= s.length <= 2000
+    // s only contains lower case English characters and parentheses.
+    // It is guaranteed that all parentheses are balanced.
+
+    // Solution by me - 1 ms
+
+    public String reverseParentheses(String s) {
+        Stack<String> stack = new Stack<>();
+        StringBuilder current = new StringBuilder();
+
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                stack.push(current.toString());
+                current.setLength(0);  // reset the current string
+            } else if (c == ')') {
+                current.reverse();
+                current.insert(0, stack.pop());
+            } else {
+                current.append(c);
+            }
+        }
+
+        return current.toString();
+    }
+
+    // Fastest code - 0 ms
+
+    static int[] index;
+    static char[] chars;
+    static int N;
+    public String reverseParenthesesFastest(String s) {
+        index = new int[1];
+        chars = s.toCharArray();
+        N = chars.length;
+        
+        return helper(new StringBuilder());
+    }
+    
+    static String helper(StringBuilder builder){
+        if(index[0] == N){
+            return builder.toString();
+        }
+        
+        while(index[0] < N){
+            char ch = chars[index[0]];
+            if(ch == '('){
+                index[0]++;
+                String temp = helper(new StringBuilder());
+                builder.append(temp);
+            } else if(ch == ')'){
+                return builder.reverse().toString();
+            } else {
+                builder.append(ch);
+            }
+            index[0]++;
+        }
+        
+        return builder.toString();
+    }
+
+
+
+    // --------------------------------------------------------------
+
+
     // 1598. Crawler Log Folder
     // Solved
     // Easy
