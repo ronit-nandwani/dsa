@@ -7,6 +7,167 @@ import java.util.Stack;
 import advanced.trees.Trees2.Pair;
 
 public class StringsLeetCode {
+    // 1717. Maximum Score From Removing Substrings
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // You are given a string s and two integers x and y. You can perform two types of operations any number of times.
+
+    // Remove substring "ab" and gain x points.
+    // For example, when removing "ab" from "cabxbae" it becomes "cxbae".
+    // Remove substring "ba" and gain y points.
+    // For example, when removing "ba" from "cabxbae" it becomes "cabxe".
+    // Return the maximum points you can gain after applying the above operations on s.
+
+    // Example 1:
+
+    // Input: s = "cdbcbbaaabab", x = 4, y = 5
+    // Output: 19
+    // Explanation:
+    // - Remove the "ba" underlined in "cdbcbbaaabab". Now, s = "cdbcbbaaab" and 5 points are added to the score.
+    // - Remove the "ab" underlined in "cdbcbbaaab". Now, s = "cdbcbbaa" and 4 points are added to the score.
+    // - Remove the "ba" underlined in "cdbcbbaa". Now, s = "cdbcba" and 5 points are added to the score.
+    // - Remove the "ba" underlined in "cdbcba". Now, s = "cdbc" and 5 points are added to the score.
+    // Total score = 5 + 4 + 5 + 5 = 19.
+    // Example 2:
+
+    // Input: s = "aabbaaxybbaabb", x = 5, y = 4
+    // Output: 20
+    
+
+    // Constraints:
+
+    // 1 <= s.length <= 105
+    // 1 <= x, y <= 104
+    // s consists of lowercase English letters.
+
+
+    // Solution by me - 47 ms
+
+    public int maximumGain(String s, int x, int y) {
+        // Decide the order of operations based on the given x and y
+        if (x >= y) {
+            return maxGainHelper(s, 'a', 'b', x, y);
+        } else {
+            return maxGainHelper(s, 'b', 'a', y, x);
+        }
+    }
+    
+    private int maxGainHelper(String s, char first, char second, int firstScore, int secondScore) {
+        int totalScore = 0;
+        StringBuilder stack = new StringBuilder();
+        
+        // Process the string to remove `first` followed by `second` substrings
+        for (char c : s.toCharArray()) {
+            if (c == second && stack.length() > 0 && stack.charAt(stack.length() - 1) == first) {
+                stack.deleteCharAt(stack.length() - 1);
+                totalScore += firstScore;
+            } else {
+                stack.append(c);
+            }
+        }
+        
+        // Process the remaining string to remove `second` followed by `first` substrings
+        StringBuilder remainingStack = new StringBuilder();
+        for (char c : stack.toString().toCharArray()) {
+            if (c == first && remainingStack.length() > 0 && remainingStack.charAt(remainingStack.length() - 1) == second) {
+                remainingStack.deleteCharAt(remainingStack.length() - 1);
+                totalScore += secondScore;
+            } else {
+                remainingStack.append(c);
+            }
+        }
+        
+        return totalScore;
+    }
+
+    // Fastest Solution - 18 ms
+
+
+    class RunnableDemo implements Runnable {
+        Object sharedObject;
+        private Thread t;
+        private int idx;
+        private StringBuilder str;
+        private int out;
+        private int x;
+        private int y;
+
+        RunnableDemo(StringBuilder builder, int x, int y, Object obj) {
+            str = builder;
+            out = 0;
+            this.x = x;
+            this.y = y;
+            sharedObject = obj;
+        }
+
+        public void run() {
+            if (x > y) {
+                ab();
+                ba();
+            } else {
+                ba();
+                ab();
+            }
+            synchronized (sharedObject) {
+                sharedObject.notify();
+            }
+        }
+
+        public void start() {
+            if (t == null) {
+                t = new Thread(this);
+                t.start();
+            }
+        }
+
+        public int get() {
+            return out;
+        }
+
+        private void ab() {
+            idx = str.indexOf("ab");
+            while (idx != -1) {
+                out += x;
+                str.delete(idx, idx + 2);
+                idx = str.indexOf("ab", idx - 1);
+            }
+        }
+
+        private void ba() {
+            idx = str.indexOf("ba");
+            while (idx != -1) {
+                out += y;
+                str.delete(idx, idx + 2);
+                idx = str.indexOf("ba", idx - 1);
+            }
+        }
+    }
+
+    class Solution {
+
+        public int maximumGain(String s, int x, int y) {
+            Object sharedObject = new Object();
+            StringBuilder str = new StringBuilder("q" + s + "q");
+            RunnableDemo R1 = new RunnableDemo(str, x, y, sharedObject);
+            R1.start();
+            synchronized (sharedObject) {
+                try {
+                    sharedObject.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return R1.get();
+        }
+    }
+
+
+    // ----------------------------------------------------------------------
+
+
     //     1190. Reverse Substrings Between Each Pair of Parentheses
     // Solved
     // Medium
