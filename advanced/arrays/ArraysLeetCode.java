@@ -1,11 +1,15 @@
 package advanced.arrays;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 // import javax.swing.tree.TreeNode;
 
@@ -32,6 +36,148 @@ class ListNode {
  }
 
 public class ArraysLeetCode {
+    // 2751. Robot Collisions
+    // Solved
+    // Hard
+    // Topics
+    // Companies
+    // Hint
+    // There are n 1-indexed robots, each having a position on a line, health, and movement direction.
+
+    // You are given 0-indexed integer arrays positions, healths, and a string directions (directions[i] is either 'L' for left or 'R' for right). All integers in positions are unique.
+
+    // All robots start moving on the line simultaneously at the same speed in their given directions. If two robots ever share the same position while moving, they will collide.
+
+    // If two robots collide, the robot with lower health is removed from the line, and the health of the other robot decreases by one. The surviving robot continues in the same direction it was going. If both robots have the same health, they are both removed from the line.
+
+    // Your task is to determine the health of the robots that survive the collisions, in the same order that the robots were given, i.e. final health of robot 1 (if survived), final health of robot 2 (if survived), and so on. If there are no survivors, return an empty array.
+
+    // Return an array containing the health of the remaining robots (in the order they were given in the input), after no further collisions can occur.
+
+    // Note: The positions may be unsorted.
+
+    // Example 1:
+
+    // Input: positions = [5,4,3,2,1], healths = [2,17,9,15,10], directions = "RRRRR"
+    // Output: [2,17,9,15,10]
+    // Explanation: No collision occurs in this example, since all robots are moving in the same direction. So, the health of the robots in order from the first robot is returned, [2, 17, 9, 15, 10].
+    // Example 2:
+
+    // Input: positions = [3,5,2,6], healths = [10,10,15,12], directions = "RLRL"
+    // Output: [14]
+    // Explanation: There are 2 collisions in this example. Firstly, robot 1 and robot 2 will collide, and since both have the same health, they will be removed from the line. Next, robot 3 and robot 4 will collide and since robot 4's health is smaller, it gets removed, and robot 3's health becomes 15 - 1 = 14. Only robot 3 remains, so we return [14].
+    // Example 3:
+
+    // Input: positions = [1,2,5,6], healths = [10,10,11,11], directions = "RLRL"
+    // Output: []
+    // Explanation: Robot 1 and robot 2 will collide and since both have the same health, they are both removed. Robot 3 and 4 will collide and since both have the same health, they are both removed. So, we return an empty array, [].
+    
+
+    // Constraints:
+
+    // 1 <= positions.length == healths.length == directions.length == n <= 105
+    // 1 <= positions[i], healths[i] <= 109
+    // directions[i] == 'L' or directions[i] == 'R'
+    // All values in positions are distinct
+
+
+    // Solution by me - 91 ms
+
+    public List<Integer> survivedRobotsHealths(int[] positions, int[] healths, String directions) {
+        int n = positions.length;
+        int[][] robots = new int[n][4];
+        
+        // Combine positions, healths, and directions into a single array for sorting
+        for (int i = 0; i < n; i++) {
+            robots[i][0] = positions[i];
+            robots[i][1] = healths[i];
+            robots[i][2] = directions.charAt(i) == 'R' ? 1 : -1; // 1 for 'R', -1 for 'L'
+            robots[i][3] = i; // Original index
+        }
+        
+        // Sort robots by their positions
+        Arrays.sort(robots, Comparator.comparingInt(a -> a[0]));
+        
+        Stack<int[]> stack = new Stack<>();
+        
+        for (int[] robot : robots) {
+            int pos = robot[0];
+            int health = robot[1];
+            int dir = robot[2];
+            int originalIndex = robot[3];
+            
+            if (dir == 1) {
+                stack.push(robot);
+            } else {
+                while (!stack.isEmpty() && stack.peek()[2] == 1 && stack.peek()[1] < health) {
+                    int[] r = stack.pop();
+                    health -= 1;
+                }
+                if (!stack.isEmpty() && stack.peek()[2] == 1 && stack.peek()[1] == health) {
+                    stack.pop();
+                } else if (!stack.isEmpty() && stack.peek()[2] == 1) {
+                    stack.peek()[1] -= 1;
+                } else {
+                    robot[1] = health;
+                    stack.push(robot);
+                }
+            }
+        }
+        
+        // Collect remaining robots and sort by original indices
+        List<int[]> survivors = new ArrayList<>(stack);
+        survivors.sort(Comparator.comparingInt(a -> a[3]));
+        List<Integer> survivors1 = new ArrayList<>();
+        for (int[] robot : survivors) {
+                survivors1.add(robot[1]);
+        }
+        return survivors1;
+    }
+
+
+    // Fastest Solution - 11 ms 
+
+    public List<Integer> survivedRobotsHealthsFastest(int[] positions, int[] healths, String directions) {
+        var robots = new long[positions.length];
+        for (int i = 0; i < robots.length; i++) {
+            robots[i] = (((long) positions[i]) << 32) | i;
+        }
+        Arrays.sort(robots);
+        int sl = 0;
+        for (long posAndIndex : robots) {
+            int robot = (int) posAndIndex;
+            if(directions.charAt(robot) == 'R') {
+                robots[sl++] = robot;
+            } else {
+                while(sl != 0 && healths[robot] != 0) {
+                    int other = (int) robots[sl - 1];
+                    if (healths[other] > healths[robot]) {
+                        healths[robot] = 0;
+                        healths[other]--;
+                    } else if (healths[other] < healths[robot]) {
+                        healths[other] = 0;
+                        healths[robot]--;
+                        sl--;
+                    } else {
+                        healths[other] = 0;
+                        healths[robot] = 0;
+                        sl--;
+                    }
+                }
+            }
+        }
+        var ans = new ArrayList<Integer>(positions.length);
+        for (int health : healths) {
+            if (health > 0) ans.add(health);
+        }
+        return ans;
+    }
+
+
+
+    // -----------------------------------------------------
+
+
     // 1701. Average Waiting Time
     // Solved
     // Medium
