@@ -1,12 +1,255 @@
 package intermediate.strings;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.TreeMap;
 
 import advanced.trees.Trees2.Pair;
 
 public class StringsLeetCode {
+    // 726. Number of Atoms
+    // Solved
+    // Hard
+    // Topics
+    // Companies
+    // Hint
+    // Given a string formula representing a chemical formula, return the count of each atom.
+
+    // The atomic element always starts with an uppercase character, then zero or more lowercase letters, representing the name.
+
+    // One or more digits representing that element's count may follow if the count is greater than 1. If the count is 1, no digits will follow.
+
+    // For example, "H2O" and "H2O2" are possible, but "H1O2" is impossible.
+    // Two formulas are concatenated together to produce another formula.
+
+    // For example, "H2O2He3Mg4" is also a formula.
+    // A formula placed in parentheses, and a count (optionally added) is also a formula.
+
+    // For example, "(H2O2)" and "(H2O2)3" are formulas.
+    // Return the count of all elements as a string in the following form: the first name (in sorted order), followed by its count (if that count is more than 1), followed by the second name (in sorted order), followed by its count (if that count is more than 1), and so on.
+
+    // The test cases are generated so that all the values in the output fit in a 32-bit integer.
+
+    // Example 1:
+
+    // Input: formula = "H2O"
+    // Output: "H2O"
+    // Explanation: The count of elements are {'H': 2, 'O': 1}.
+    // Example 2:
+
+    // Input: formula = "Mg(OH)2"
+    // Output: "H2MgO2"
+    // Explanation: The count of elements are {'H': 2, 'Mg': 1, 'O': 2}.
+    // Example 3:
+
+    // Input: formula = "K4(ON(SO3)2)2"
+    // Output: "K4N2O14S4"
+    // Explanation: The count of elements are {'K': 4, 'N': 2, 'O': 14, 'S': 4}.
+
+
+    // Constraints:
+
+    // 1 <= formula.length <= 1000
+    // formula consists of English letters, digits, '(', and ')'.
+    // formula is always valid.
+
+    // Solution by me - 5 ms
+    
+    public String countOfAtoms(String formula) {
+        Stack<Map<String, Integer>> stack = new Stack<>();
+        stack.push(new HashMap<>());
+
+        int n = formula.length();
+        for (int i = 0; i < n; ) {
+            char ch = formula.charAt(i);
+
+            if (ch == '(') {
+                stack.push(new HashMap<>());
+                i++;
+            } else if (ch == ')') {
+                Map<String, Integer> top = stack.pop();
+                int j = i + 1, multiplier = 0;
+                while (j < n && Character.isDigit(formula.charAt(j))) {
+                    multiplier = multiplier * 10 + (formula.charAt(j) - '0');
+                    j++;
+                }
+                multiplier = multiplier == 0 ? 1 : multiplier;
+
+                Map<String, Integer> currentMap = stack.peek();
+                for (String key : top.keySet()) {
+                    currentMap.put(key, currentMap.getOrDefault(key, 0) + top.get(key) * multiplier);
+                }
+                i = j;
+            } else {
+                int j = i + 1;
+                while (j < n && Character.isLowerCase(formula.charAt(j))) {
+                    j++;
+                }
+                String element = formula.substring(i, j);
+                i = j;
+
+                int count = 0;
+                while (j < n && Character.isDigit(formula.charAt(j))) {
+                    count = count * 10 + (formula.charAt(j) - '0');
+                    j++;
+                }
+                count = count == 0 ? 1 : count;
+
+                Map<String, Integer> currentMap = stack.peek();
+                currentMap.put(element, currentMap.getOrDefault(element, 0) + count);
+                i = j;
+            }
+        }
+
+        Map<String, Integer> finalMap = stack.pop();
+        TreeMap<String, Integer> sortedMap = new TreeMap<>(finalMap);
+        StringBuilder sb = new StringBuilder();
+        for (String key : sortedMap.keySet()) {
+            sb.append(key);
+            int count = sortedMap.get(key);
+            if (count > 1) {
+                sb.append(count);
+            }
+        }
+        return sb.toString();
+    }
+
+    // Other Solutiion - 2 ms
+
+    public String countOfAtomsOther(String formula) {
+        Map<String, Integer> map = new HashMap<>();
+        int[] stack = new int[1000];
+        int top = 0, multiplier = 1, freq = 0;
+        char[] c = formula.toCharArray();
+        for (int i = c.length - 1; i >= 0; i--) {
+            if (c[i] >= 'a' && c[i] <= 'z') {
+                int end = i--;
+                while (i >= 0 && c[i] >= 'a' && c[i] <= 'z') i--;
+                String key = new String(c, i, end - i + 1);
+                map.put(key, map.getOrDefault(key, 0) + Math.max(freq, 1) * multiplier);
+                freq = 0;
+            } else if (c[i] >= 'A' && c[i] <= 'Z') {
+                String key = new String(c, i, 1);
+                map.put(key, map.getOrDefault(key, 0) + Math.max(freq, 1) * multiplier);
+                freq = 0;
+            } else if (c[i] >= '0' && c[i] <= '9') {
+                freq = c[i] - '0';
+                int p = 10;
+                while (i - 1 >= 0 && c[i - 1] >= '0' && c[i - 1] <= '9') {
+                    freq += p * (c[--i] - '0');
+                    p *= 10;
+                }
+            } else if (c[i] == ')') {
+                stack[top++] = multiplier;
+                multiplier *= Math.max(freq, 1);
+                freq = 0;
+            } else {
+                multiplier = stack[--top];
+            }
+        }
+        List<String> keys = new ArrayList<>(map.keySet());
+        Collections.sort(keys);
+        StringBuilder sb = new StringBuilder();
+        for (String key : keys) {
+            sb.append(key);
+            int f = map.get(key);
+            if (f > 1) sb.append(f);
+        }
+        return sb.toString();
+    }
+
+
+    // Fastest solution - 1 ms
+
+    public boolean isDigit(char c) {return c >= '0' && c <= '9';}
+    public boolean isUpper(char c) {return c >= 'A' && c <= 'Z';}
+    public boolean isLower(char c) {return c >= 'a' && c <= 'z';}
+    public String countOfAtomsFastest(String formula) {
+        char[] chars = formula.toCharArray();
+        int[] stack = new int[chars.length];
+        int p = 0;
+
+        boolean[] exists = new boolean[26];
+        int[] trie = new int[26];
+        int[][] trie2 = new int[26][26];
+        int roll = 1;
+
+        int i = chars.length - 1;
+        while(i >= 0)
+        {
+            if(chars[i] == '(')
+            {
+                roll /= stack[--p];
+                i--;
+                continue;
+            }
+            int num = 0;
+            int base = 1;
+            while(isDigit(chars[i]))
+            {
+                num += base * ((int) chars[i] - '0');
+                base *= 10;
+                i--; 
+            }
+            num = num == 0 ? 1 : num;
+
+            if(chars[i] == ')')
+            {
+                roll *= num;
+                stack[p++] = num;
+            }
+            else
+            {
+                int first = -1;
+                int second = -1;
+                if(isLower(chars[i]))
+                    second = (int) chars[i--] - 'a';
+                first = (int) chars[i] - 'A';
+                num *= roll;
+                if(second != -1)
+                {
+                    exists[first] = true;
+                    trie2[first][second] += num;
+                }
+                else
+                    trie[first] += num;
+            }
+            i--;
+        }
+        i = 0;
+        StringBuilder res = new StringBuilder();
+        for(; i < 26; i++)
+        {
+            if(trie[i] != 0)
+            {
+                res.append((char) (i + 'A'));
+                if(trie[i] != 1)
+                    res.append(trie[i]);
+            }
+            if(exists[i])
+                for(int j = 0; j < 26; j++)
+                    if(trie2[i][j] != 0)
+                    {
+                        res.append((char) (i + 'A'));
+                        res.append((char) (j + 'a'));
+                        if(trie2[i][j] != 1)
+                            res.append(trie2[i][j]);
+                    }
+        }
+        return res.toString();
+    }
+
+
+
+
+    // ------------------------------------------------------------
+
+
+
     // 1717. Maximum Score From Removing Substrings
     // Solved
     // Medium
