@@ -11,7 +11,113 @@ import java.util.TreeMap;
 import advanced.trees.Trees2.Pair;
 
 public class StringsLeetCode {
+    // 539. Minimum Time Difference
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Given a list of 24-hour clock time points in "HH:MM" format, return the minimum minutes difference between any two time-points in the list.
     
+
+    // Example 1:
+
+    // Input: timePoints = ["23:59","00:00"]
+    // Output: 1
+    // Example 2:
+
+    // Input: timePoints = ["00:00","23:59","00:00"]
+    // Output: 0
+    
+
+    // Constraints:
+
+    // 2 <= timePoints.length <= 2 * 104
+    // timePoints[i] is in the format "HH:MM".
+
+    // Solution by me - 5 ms
+
+    public int findMinDifference(List<String> timePoints) {
+        if (timePoints.size() > 1440) {
+            // There are only 1440 minutes in a day. If we have more than 1440 time points, 
+            // some must be duplicates, so the minimum difference will be 0.
+            return 0;
+        }
+
+        // Convert each time point into minutes since midnight
+        List<Integer> minutesList = new ArrayList<>();
+        for (String time : timePoints) {
+            minutesList.add(convertToMinutes(time));
+        }
+
+        // Sort the list of times in ascending order
+        Collections.sort(minutesList);
+
+        // Initialize the minimum difference to a large value
+        int minDiff = Integer.MAX_VALUE;
+
+        // Calculate the difference between each consecutive time point
+        for (int i = 1; i < minutesList.size(); i++) {
+            int diff = minutesList.get(i) - minutesList.get(i - 1);
+            minDiff = Math.min(minDiff, diff);
+        }
+
+        // Handle the wrap-around case: difference between the first and last time points
+        int wrapAroundDiff = (1440 - minutesList.get(minutesList.size() - 1)) + minutesList.get(0);
+        minDiff = Math.min(minDiff, wrapAroundDiff);
+
+        return minDiff;
+    }
+
+    // Helper function to convert a time string "HH:MM" to total minutes since midnight
+    private int convertToMinutes(String time) {
+        String[] parts = time.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {
+            throw new IllegalArgumentException("Invalid time format: " + time);
+        }
+        return hours * 60 + minutes;
+    }
+
+    // Fastest solution - 1 ms
+
+    public int findMinDifferenceFastest(List<String> timePoints) {
+        if (timePoints.size() > 1440) return 0; 
+
+        boolean[] seen = new boolean[1440]; 
+        
+        for (String time : timePoints) {
+            int minutes = convertToMinutesFastest(time);
+            if (seen[minutes]) return 0; 
+            seen[minutes] = true;
+        }
+        
+        int first = Integer.MAX_VALUE, prev = Integer.MAX_VALUE;
+        int minDiff = Integer.MAX_VALUE;
+        
+        for (int i = 0; i < 1440; i++) {
+            if (seen[i]) {
+                if (first == Integer.MAX_VALUE) {
+                    first = i;
+                } else {
+                    minDiff = Math.min(minDiff, i - prev);
+                }
+                prev = i;
+            }
+        }
+        
+
+        minDiff = Math.min(minDiff, 1440 - prev + first);
+        
+        return minDiff;
+    }
+    
+    private int convertToMinutesFastest(String time) {
+        return ((time.charAt(0) - '0') * 10 + (time.charAt(1) - '0')) * 60 
+             + (time.charAt(3) - '0') * 10 + (time.charAt(4) - '0');
+    }
+
+    // ------------------------------------------------------
 
 
     // 884. Uncommon Words from Two Sentences
