@@ -1,6 +1,113 @@
 package advanced.bit_manipulation;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
 public class BitManipulationLeetCode {
+
+    // 1371. Find the Longest Substring Containing Vowels in Even Counts
+    // Solved
+    // Medium
+    // Topics
+    // Companies
+    // Hint
+    // Given the string s, return the size of the longest substring containing each vowel an even number of times. That is, 'a', 'e', 'i', 'o', and 'u' must appear an even number of times.
+
+    // Example 1:
+
+    // Input: s = "eleetminicoworoep"
+    // Output: 13
+    // Explanation: The longest substring is "leetminicowor" which contains two each of the vowels: e, i and o and zero of the vowels: a and u.
+    // Example 2:
+
+    // Input: s = "leetcodeisgreat"
+    // Output: 5
+    // Explanation: The longest substring is "leetc" which contains two e's.
+    // Example 3:
+
+    // Input: s = "bcbcbc"
+    // Output: 6
+    // Explanation: In this case, the given string "bcbcbc" is the longest because all vowels: a, e, i, o and u appear zero times.
+
+    // Constraints:
+
+    // 1 <= s.length <= 5 x 10^5
+    // s contains only lowercase English letters.
+
+
+    // Solution by me - 46 ms
+
+    public int findTheLongestSubstring(String s) {
+        // Map to store the first occurrence of each mask
+        HashMap<Integer, Integer> maskMap = new HashMap<>();
+        // Start with the base case: an even count for all vowels (mask = 0)
+        maskMap.put(0, -1);
+        
+        int mask = 0;  // The current bitmask representing even/odd counts of vowels
+        int maxLength = 0;
+        
+        // Iterate over the string
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            
+            // Update the mask based on the current character
+            if (c == 'a') {
+                mask ^= (1 << 0);  // Toggle the bit for 'a'
+            } else if (c == 'e') {
+                mask ^= (1 << 1);  // Toggle the bit for 'e'
+            } else if (c == 'i') {
+                mask ^= (1 << 2);  // Toggle the bit for 'i'
+            } else if (c == 'o') {
+                mask ^= (1 << 3);  // Toggle the bit for 'o'
+            } else if (c == 'u') {
+                mask ^= (1 << 4);  // Toggle the bit for 'u'
+            }
+            
+            // If this mask has been seen before, update the maxLength
+            if (maskMap.containsKey(mask)) {
+                maxLength = Math.max(maxLength, i - maskMap.get(mask));
+            } else {
+                // If it's the first time we see this mask, store its index
+                maskMap.put(mask, i);
+            }
+        }
+        
+        return maxLength;
+    }
+
+    // Fastest Solution - 7 ms
+
+    public int findTheLongestSubstringFastest(String s) {
+        int rez=0, i=0,j=1;
+        char [] c= s.toCharArray();
+        byte [] vowel= new byte [26];
+        vowel['a'-'a']=1;
+        vowel['e'-'a']=2;
+        vowel['i'-'a']=4;
+        vowel['o'-'a']=8;
+        vowel['u'-'a']=16;
+        int [] first= new int [32];
+        Arrays.fill(first,-2);
+        first[0]=-1;
+        int xor=0;
+        for(;i<c.length;++i){
+            if(vowel[c[i]-'a']!=0){
+                int aux=i-first[xor]-1;
+                if(rez<aux)rez=aux;
+                xor^=vowel[c[i]-'a'];
+                if(first[xor]==-2)first[xor]=i;
+            }
+        }
+        if(rez<i-first[xor]-1)rez=i-first[xor]-1;
+        return rez;
+    }
+
+
+
+    // ---------------------------------------------------------
+
+
+
 
     // 2419. Longest Subarray With Maximum Bitwise AND
     // Solved
