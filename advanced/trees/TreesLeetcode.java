@@ -18,6 +18,109 @@ class TreeNode {
     }
 }
 public class TreesLeetcode {
+    // 440. K-th Smallest in Lexicographical Order
+    // Hard
+    // Topics
+    // Companies
+    // Given two integers n and k, return the kth lexicographically smallest integer in the range [1, n].
+
+    // Example 1:
+
+    // Input: n = 13, k = 2
+    // Output: 10
+    // Explanation: The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.
+    // Example 2:
+
+    // Input: n = 1, k = 1
+    // Output: 1
+    
+
+    // Constraints:
+
+    // 1 <= k <= n <= 109
+
+    // Solution - 0 ms
+
+    public int findKthNumber(int n, int k) {
+        // Start with the first prefix (i.e., 1)
+        int current = 1;
+        k = k - 1; // Because we are starting from 1, not 0
+        
+        while (k > 0) {
+            // Find the number of steps between the current prefix and the next
+            long steps = calculateSteps(current, n);
+            System.out.println("curr " + current + " :: steps " + steps + " :: k "+ k);
+            if (steps <= k) {
+                System.out.println("in < k");
+                // If k is larger than or equal to steps, we skip to the next prefix
+                current++;
+                k -= steps;
+            } else {
+                System.out.println("in > k");
+                // If k is smaller than steps, go deeper in the current prefix
+                current *= 10;
+                k--; // Move down one level
+            }
+        }
+        
+        return current;
+    }
+    
+    // Helper function to calculate the number of steps between the current prefix and the next
+    private long calculateSteps(long current, long n) {
+        long steps = 0;
+        long first = current;
+        long last = current;
+        
+        // Calculate steps between first and last within bounds
+        while (first <= n) {
+            steps += Math.min(n, last) - first + 1;
+            first *= 10;
+            last = last * 10 + 9;
+        }
+        
+        return steps;
+    }
+
+
+    // Fastest Solution - 0 ms
+
+    public int findKthNumberOther(int n, int k) {
+        int curr = 1;
+        k--;
+
+        while (k > 0) {
+            int step = countSteps(n, curr, curr + 1);
+            // If the steps are less than or equal to k, we skip this prefix's subtree
+            if (step <= k) {
+                // Move to the next prefix and decrease k by the number of steps we skip
+                curr++;
+                k -= step;
+            } else {
+                // Move to the next level of the tree and decrement k by 1
+                curr *= 10;
+                k--;
+            }
+        }
+
+        return curr;
+    }
+
+    // To count how many numbers exist between prefix1 and prefix2
+    private int countSteps(int n, long prefix1, long prefix2) {
+        int steps = 0;
+        while (prefix1 <= n) {
+            steps += Math.min(n + 1, prefix2) - prefix1;
+            prefix1 *= 10;
+            prefix2 *= 10;
+        }
+        return steps;
+    }
+
+
+    // ------------------------------------------------------
+
+
 
     // 145. Binary Tree Postorder Traversal
     // Solved
